@@ -9,3 +9,8 @@ https://github.com/johnowl/owl-rules
 
 https://github.com/johnowl/owl-rules/blob/master/src/main/kotlin/com/johnowl/rules/RulesEvaluator.kt
 
+## Lexical Analyser Generators
+
+https://github.com/blynn/nex
+
+https://pkg.go.dev/modernc.org/golex
