@@ -8,6 +8,14 @@ install_nex() {
     popd >/dev/null
 }
 
+install_goyacc() {
+    echo installing goyacc
+    pushd $PWD >/dev/null
+    cd /tmp
+    go get modernc.org/goyacc ;# supports %precedence
+    popd >/dev/null
+}
+
 which nex 2>/dev/null || install_nex
 
 echo generating lexer
@@ -22,3 +30,8 @@ echo running lexer test: $expression
 
 echo "$expression" | lexer-run
 
+which goyacc 2>/dev/null || install_goyacc
+
+go generate ./parser ;# see ./parser/generate.go
+
+go install ./parser-run

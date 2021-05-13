@@ -28,12 +28,12 @@
 //
 package lexer
 type GobuleLexer struct {
-    lexer *Lexer
+    Lex *Lexer
 }
 func New(input io.Reader) *GobuleLexer {
-  return &GobuleLexer{lexer:NewLexer(input)}
+  return &GobuleLexer{Lex:NewLexer(input)}
 }
 func (l *GobuleLexer) Run() {
-  txt := func() string { return l.lexer.Text() }
-  NN_FUN(l.lexer)
+  txt := func() string { return l.Lex.Text() }
+  NN_FUN(l.Lex)
 }
