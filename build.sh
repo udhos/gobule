@@ -2,10 +2,10 @@
 
 install_nex() {
     echo installing nex
-	pushd $PWD >/dev/null
-	cd /tmp
-	go get github.com/blynn/nex
-	popd >/dev/null
+    pushd $PWD >/dev/null
+    cd /tmp
+    go get github.com/blynn/nex
+    popd >/dev/null
 }
 
 which nex 2>/dev/null || install_nex
