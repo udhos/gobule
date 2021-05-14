@@ -13,9 +13,10 @@ import (
 
 // fields inside this union end up as the fields in a structure known
 // as ${PREFIX}SymType, of which a reference is passed to the lexer.
+
 %union{
     typeExp exp.Exp
-	tok int
+	tok bool
 }
 
 // any non-terminal which returns a value needs a type, which is

@@ -1,4 +1,6 @@
 lexer/lexer.go
+parser/parser.go
+parser/y.output
 
 # Binaries for programs and plugins
 *.exe

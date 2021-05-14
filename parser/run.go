@@ -28,7 +28,3 @@ func (l *Lex) Lex(lval *yySymType) int {
 func (l *Lex) Error(s string) {
 	log.Printf("parser.Lex.Error: %s", s)
 }
-
-func (l *Lex) Errors() int {
-	return 0
-}

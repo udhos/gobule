@@ -20,7 +20,9 @@ which nex 2>/dev/null || install_nex
 
 echo generating lexer
 
-nex -s < lexer/lexer.nex > lexer/lexer.go
+rm lexer/lexer.go
+go generate -v -x ./lexer ;# see ./lexer/generate.go
+#[ -f lexer/lexer.go ] || nex -s < lexer/lexer.nex > lexer/lexer.go
 
 go install ./lexer-run
 
@@ -32,6 +34,8 @@ echo "$expression" | lexer-run
 
 which goyacc 2>/dev/null || install_goyacc
 
-go generate ./parser ;# see ./parser/generate.go
+rm parser/parser.go
+go generate -v -x ./parser ;# see ./parser/generate.go
+#[ -f parser/parser.go ] || goyacc -o parser.go parser.y
 
 go install ./parser-run
