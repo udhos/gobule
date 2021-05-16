@@ -38,9 +38,7 @@ func (t Token) String() string {
 }
 
 const (
-	TkError TokenType = iota
-	TkEOF
-	TkKeywordTrue
+	TkKeywordTrue TokenType = iota
 	TkKeywordFalse
 	TkKeywordAnd
 	TkKeywordOr
@@ -62,11 +60,11 @@ const (
 	TkNE
 	TkGE
 	TkLE
+	TkError
+	TkEOF
 )
 
 var tokenName = []string{
-	"ERROR",
-	"EOF",
 	"KW-TRUE",
 	"KW-FALSE",
 	"KW-AND",
@@ -89,6 +87,8 @@ var tokenName = []string{
 	"NE",
 	"GE",
 	"LE",
+	"ERROR",
+	"EOF",
 }
 
 func New(input io.Reader) *Lexer {

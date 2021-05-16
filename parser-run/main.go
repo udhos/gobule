@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	status := parser.Run(os.Stdin)
+	result := parser.Run(os.Stdin)
 
-	log.Printf("status: %d\n", status)
+	log.Printf("result: eval=%v status=%d errors=%d last_error: [%s]\n", result.Eval, result.Status, result.Errors, result.LastError)
 }

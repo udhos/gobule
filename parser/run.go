@@ -7,13 +7,23 @@ import (
 	"github.com/udhos/gobule/bulexer"
 )
 
-func Run(input io.Reader) int {
+type Result struct {
+	Eval      bool
+	Errors    int
+	Status    int
+	LastError string
+}
+
+func Run(input io.Reader) Result {
 
 	lex := &Lex{lex: bulexer.New(input), debug: true}
 
 	status := yyParse(lex)
 
-	return status
+	result.Errors = lex.errors
+	result.Status = status
+
+	return result
 }
 
 type Lex struct {
@@ -29,7 +39,7 @@ func (l *Lex) Lex(lval *yySymType) int {
 	parserId := parserToken(token.Type)
 
 	if l.debug {
-		log.Printf("parser.Lex: %s parserId=%d", token.String(), parserId)
+		log.Printf("parser.Lex: %s lexerId=%d parserId=%d", token.String(), token.Type, parserId)
 	}
 
 	if token.Type == bulexer.TkEOF {
@@ -40,10 +50,13 @@ func (l *Lex) Lex(lval *yySymType) int {
 }
 
 func parserToken(lexerId bulexer.TokenType) int {
-	return 999 // FIXME WRITEME
+	return int(lexerId) + parserTokenIDFirst
 }
 
 func (l *Lex) Error(s string) {
 	l.errors++
-	log.Printf("parser.Lex.Error: errors=%d: %s", l.errors, s)
+	if l.debug {
+		log.Printf("parser.Lex.Error: errors=%d: %s", l.errors, s)
+	}
+	result.LastError = s
 }
