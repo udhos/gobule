@@ -46,6 +46,16 @@ func (l *Lex) Lex(lval *yySymType) int {
 		return 0 // real EOF for parser
 	}
 
+	// need to store values only for some terminals
+	// when a parser rule action needs to consume the value
+	// for example: variable, literal (number, text)
+	switch parserId {
+	case TkText:
+		lval.typeText = token.Value
+	case TkNumber:
+		lval.typeNumber = token.Value
+	}
+
 	return parserId
 }
 

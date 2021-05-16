@@ -6,14 +6,9 @@ package parser
 // header of parser.y 
 
 import (
-        //"fmt"
+        "fmt"
+        "strconv"
 )
-
-const (
-	parserTokenIDFirst = TkKeywordTrue
-)
-
-var result Result
 
 %}
 
@@ -22,12 +17,19 @@ var result Result
 
 %union{
     typeBool bool
+    typeText string
+    typeNumber string
+    typeValue nodeValue
+    typeList []nodeValue
 }
 
 // any non-terminal which returns a value needs a type, which is
 // really a field name in the above union struct
 
 %type <typeBool> bool_exp
+%type <typeValue> value
+%type <typeList> list_exp
+%type <typeList> list
 
 // same for terminals
 
@@ -40,8 +42,8 @@ var result Result
 %token <typeBool> TkKeywordCurrentTime
 %token <typeBool> TkKeywordNumber
 %token <typeBool> TkKeywordList
-%token <typeBool> TkNumber
-%token <typeBool> TkText
+%token <typeNumber> TkNumber
+%token <typeText> TkText
 %token <typeBool> TkIdent
 %token <typeBool> TkParL
 %token <typeBool> TkParR
@@ -64,3 +66,44 @@ bool_exp: TkParL bool_exp TkParR { $$ = $2 }
     | TkKeywordNot bool_exp { $$ = !$2 }
     | TkKeywordTrue { $$ = true }
     | TkKeywordFalse { $$ = false }
+    | list_exp TkKeywordContains value
+        {
+            list := $1
+            wanted := $3
+            $$ = contains(list, wanted)
+        }
+    | list_exp TkKeywordNot TkKeywordContains value
+        {
+            list := $1
+            wanted := $4
+            $$ = !contains(list, wanted)
+        }
+
+list_exp: TkSBktL list TkSBktR { $$ = $2 }
+
+value: TkText { $$ = nodeValue{nodeType: valueText, text: $1} }
+    | TkNumber
+        {
+            s := $1
+            n, errConv := strconv.Atoi(s)
+            if errConv != nil {
+                yylex.Error(fmt.Sprintf("bad number conversion: '%s': %v", s, errConv))
+            }
+            $$ = nodeValue{nodeType: valueNumber, number: n}
+        }
+
+list: /* empty */
+    {
+        valueList = []nodeValue{}
+        $$ = valueList
+    }
+    | value
+    {
+        valueList = []nodeValue{$1}
+        $$ = valueList
+    }
+    | list value
+    {
+        valueList = append(valueList, $2)
+        $$ = valueList
+    }
