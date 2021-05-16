@@ -9,16 +9,6 @@ https://github.com/johnowl/owl-rules
 
 https://github.com/johnowl/owl-rules/blob/master/src/main/kotlin/com/johnowl/rules/RulesEvaluator.kt
 
-## Lexical Analyser Generators
-
-### Nex
-
-https://github.com/blynn/nex
-
-### ModernC golex
-
-https://pkg.go.dev/modernc.org/golex
-
 ## Syntax Analyser Generators
 
 ### ModernC goyac
