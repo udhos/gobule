@@ -66,18 +66,8 @@ bool_exp: TkParL bool_exp TkParR { $$ = $2 }
     | TkKeywordNot bool_exp { $$ = !$2 }
     | TkKeywordTrue { $$ = true }
     | TkKeywordFalse { $$ = false }
-    | list_exp TkKeywordContains value
-        {
-            list := $1
-            wanted := $3
-            $$ = contains(list, wanted)
-        }
-    | list_exp TkKeywordNot TkKeywordContains value
-        {
-            list := $1
-            wanted := $4
-            $$ = !contains(list, wanted)
-        }
+    | list_exp TkKeywordContains value { $$ = contains($1, $3) }
+    | list_exp TkKeywordNot TkKeywordContains value { $$ = !contains($1, $4) }
 
 list_exp: TkSBktL list TkSBktR { $$ = $2 }
 
