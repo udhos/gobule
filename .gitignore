@@ -1,4 +1,3 @@
-lexer/lexer.go
 parser/parser.go
 parser/y.output
 
