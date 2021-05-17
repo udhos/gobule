@@ -213,12 +213,10 @@ func (l *Lexer) Next() Token {
 				if errSave := l.buf.WriteByte(b); errSave != nil {
 					return Token{Type: TkError, Value: errSave.Error()}
 				}
-				l.state = stNumber
 			case isLetter(b):
 				if errSave := l.buf.WriteByte(b); errSave != nil {
 					return Token{Type: TkError, Value: errSave.Error()}
 				}
-				l.state = stIdent
 			default:
 				if errUnread := l.reader.UnreadByte(); errUnread != nil {
 					return Token{Type: TkError, Value: errUnread.Error()}
