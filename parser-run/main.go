@@ -8,7 +8,16 @@ import (
 )
 
 func main() {
-	result := parser.Run(os.Stdin)
+	var vars = map[string]string{
+		"name":   "John",
+		"number": "123",
+	}
+
+	log.Printf("FIXME vars: %v", vars)
+
+	debug := false
+
+	result := parser.Run(os.Stdin, vars, debug)
 
 	log.Printf("result: eval=%v status=%d errors=%d last_error: [%s]\n", result.Eval, result.Status, result.Errors, result.LastError)
 }

@@ -16,9 +16,9 @@ type Result struct {
 }
 
 // Run executes parser for input.
-func Run(input io.Reader) Result {
+func Run(input io.Reader, vars map[string]string, debug bool) Result {
 
-	lex := &Lex{lex: bulexer.New(input), debug: true}
+	lex := &Lex{lex: bulexer.New(input), debug: debug, vars: vars}
 
 	status := yyParse(lex)
 
@@ -33,6 +33,10 @@ type Lex struct {
 	lex    *bulexer.Lexer
 	errors int
 	debug  bool
+
+	// context data for parser:
+	vars map[string]string
+	// FIXME: move result here
 }
 
 // Lex is called by the syntatical parser to request the next token.

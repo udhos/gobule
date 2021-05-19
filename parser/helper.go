@@ -6,30 +6,30 @@ const (
 
 var result Result
 
-type valueType int
+type sType int
 
 const (
-	valueText valueType = iota
-	valueNumber
+	scalarText sType = iota
+	scalarNumber
 )
 
-type nodeValue struct {
-	nodeType valueType
-	text     string
-	number   int
+type scalar struct {
+	scalarType sType
+	text       string
+	number     int
 }
 
-func (n nodeValue) Equals(m nodeValue) bool {
-	if n.nodeType == valueText && m.nodeType == valueText {
-		return n.text == m.text
+func (s scalar) Equals(ss scalar) bool {
+	if s.scalarType == scalarText && ss.scalarType == scalarText {
+		return s.text == ss.text
 	}
-	if n.nodeType == valueNumber && m.nodeType == valueNumber {
-		return n.number == m.number
+	if s.scalarType == scalarNumber && ss.scalarType == scalarNumber {
+		return s.number == ss.number
 	}
 	return false
 }
 
-func contains(list []nodeValue, wanted nodeValue) bool {
+func contains(list []scalar, wanted scalar) bool {
 	for _, v := range list {
 		if wanted.Equals(v) {
 			return true
@@ -38,4 +38,4 @@ func contains(list []nodeValue, wanted nodeValue) bool {
 	return false
 }
 
-var valueList = []nodeValue{}
+var scalarList = []scalar{}
