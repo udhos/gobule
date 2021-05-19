@@ -7,6 +7,7 @@ import (
 	"github.com/udhos/gobule/bulexer"
 )
 
+// Result returns parser result.
 type Result struct {
 	Eval      bool
 	Errors    int
@@ -14,6 +15,7 @@ type Result struct {
 	LastError string
 }
 
+// Run executes parser for input.
 func Run(input io.Reader) Result {
 
 	lex := &Lex{lex: bulexer.New(input), debug: true}
@@ -26,20 +28,22 @@ func Run(input io.Reader) Result {
 	return result
 }
 
+// Lex provides the lexical scanner interface required by the generated parser.
 type Lex struct {
 	lex    *bulexer.Lexer
 	errors int
 	debug  bool
 }
 
+// Lex is called by the syntatical parser to request the next token.
 func (l *Lex) Lex(lval *yySymType) int {
 
 	token := l.lex.Next()
 
-	parserId := parserToken(token.Type)
+	parserID := parserToken(token.Type)
 
 	if l.debug {
-		log.Printf("parser.Lex: %s lexerId=%d parserId=%d", token.String(), token.Type, parserId)
+		log.Printf("parser.Lex: %s lexerId=%d parserId=%d", token.String(), token.Type, parserID)
 	}
 
 	if token.Type == bulexer.TkEOF {
@@ -49,18 +53,16 @@ func (l *Lex) Lex(lval *yySymType) int {
 	// need to store values only for some terminals
 	// when a parser rule action needs to consume the value
 	// for example: variable, literal (number, text)
-	switch parserId {
-	case TkText:
-		lval.typeText = token.Value
-	case TkNumber:
-		lval.typeNumber = token.Value
+	switch parserID {
+	case TkText, TkNumber, TkIdent:
+		lval.typeString = token.Value
 	}
 
-	return parserId
+	return parserID
 }
 
-func parserToken(lexerId bulexer.TokenType) int {
-	return int(lexerId) + parserTokenIDFirst
+func parserToken(lexerID bulexer.TokenType) int {
+	return int(lexerID) + parserTokenIDFirst
 }
 
 func (l *Lex) Error(s string) {

@@ -17,8 +17,7 @@ import (
 
 %union{
     typeBool bool
-    typeText string
-    typeNumber string
+    typeString string // holds: variable, number, or text
     typeValue nodeValue
     typeList []nodeValue
 }
@@ -42,9 +41,9 @@ import (
 %token <typeBool> TkKeywordCurrentTime
 %token <typeBool> TkKeywordNumber
 %token <typeBool> TkKeywordList
-%token <typeNumber> TkNumber
-%token <typeText> TkText
-%token <typeBool> TkIdent
+%token <typeString> TkNumber
+%token <typeString> TkText
+%token <typeString> TkIdent
 %token <typeBool> TkParL
 %token <typeBool> TkParR
 %token <typeBool> TkSBktL

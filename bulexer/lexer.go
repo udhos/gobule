@@ -18,6 +18,7 @@ const (
 	stEOF
 )
 
+// Lexer is a lexical scanner.
 type Lexer struct {
 	reader io.ByteScanner
 	state  lexState
@@ -25,12 +26,15 @@ type Lexer struct {
 	debug  bool
 }
 
+// TokenType identifies the type for lexical tokens returned by scanner.
 type TokenType int
 
+// Name returns the name of the token type.
 func (t TokenType) Name() string {
 	return tokenName[t]
 }
 
+// Token holds a token matched by the scanner.
 type Token struct {
 	Type  TokenType
 	Value string
@@ -40,6 +44,7 @@ func (t Token) String() string {
 	return t.Type.Name() + "(" + t.Value + ")"
 }
 
+// Token types returned by the scanner.
 const (
 	TkKeywordTrue TokenType = iota
 	TkKeywordFalse
@@ -94,6 +99,7 @@ var tokenName = []string{
 	"EOF",
 }
 
+// New creates a lexical scanner.
 func New(input io.Reader) *Lexer {
 	return &Lexer{reader: bufio.NewReader(input)}
 }
@@ -116,12 +122,11 @@ func isLetter(b byte) bool {
 
 var eof = Token{Type: TkEOF}
 
+// Next returns the next scanner token, or TkEOF, or TkError.
 func (l *Lexer) Next() Token {
 
-	for {
-		if l.state == stEOF {
-			return eof
-		}
+SCANNER:
+	for l.state != stEOF {
 
 		b, errByte := l.reader.ReadByte()
 
@@ -135,7 +140,7 @@ func (l *Lexer) Next() Token {
 			switch errByte {
 			case io.EOF:
 				l.state = stEOF
-				return eof
+				break SCANNER
 			case nil:
 			default:
 				return Token{Type: TkError, Value: errByte.Error()}
@@ -291,7 +296,7 @@ func (l *Lexer) Next() Token {
 		}
 	}
 
-	return Token{Type: TkEOF}
+	return eof
 }
 
 var keywords = map[string]TokenType{
