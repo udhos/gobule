@@ -59,7 +59,7 @@ import (
 %%
 
 prog:
-    bool_exp { result.Eval = $1 }
+    bool_exp { yylex.(*Lex).result.Eval = $1 }
 
 bool_exp:
     TkParL bool_exp TkParR { $$ = $2 }
@@ -79,13 +79,15 @@ list_exp:
 list:
     scalar_exp
     {
-        scalarList = []scalar{$1}
-        $$ = scalarList
+        l := yylex.(*Lex)
+        l.scalarList = []scalar{$1}
+        $$ = l.scalarList
     }
     | list scalar_exp
     {
-        scalarList = append(scalarList, $2)
-        $$ = scalarList
+        l := yylex.(*Lex)
+        l.scalarList = append(l.scalarList, $2)
+        $$ = l.scalarList
     }
 
 scalar_exp:

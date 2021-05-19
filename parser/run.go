@@ -22,10 +22,10 @@ func Run(input io.Reader, vars map[string]string, debug bool) Result {
 
 	status := yyParse(lex)
 
-	result.Errors = lex.errors
-	result.Status = status
+	lex.result.Errors = lex.errors
+	lex.result.Status = status
 
-	return result
+	return lex.result
 }
 
 // Lex provides the lexical scanner interface required by the generated parser.
@@ -35,8 +35,9 @@ type Lex struct {
 	debug  bool
 
 	// context data for parser:
-	vars map[string]string
-	// FIXME: move result here
+	vars       map[string]string // input variables
+	scalarList []scalar          // aux
+	result     Result            // output
 }
 
 // Lex is called by the syntatical parser to request the next token.
@@ -74,5 +75,5 @@ func (l *Lex) Error(s string) {
 	if l.debug {
 		log.Printf("parser.Lex.Error: errors=%d: %s", l.errors, s)
 	}
-	result.LastError = s
+	l.result.LastError = s
 }

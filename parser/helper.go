@@ -4,8 +4,6 @@ const (
 	parserTokenIDFirst = TkKeywordTrue
 )
 
-var result Result
-
 type sType int
 
 const (
@@ -37,5 +35,3 @@ func contains(list []scalar, wanted scalar) bool {
 	}
 	return false
 }
-
-var scalarList = []scalar{}
