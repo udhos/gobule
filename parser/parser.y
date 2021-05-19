@@ -34,8 +34,8 @@ import (
 
 %token <typeBool> TkKeywordTrue
 %token <typeBool> TkKeywordFalse
-%token <typeBool> TkKeywordAnd
-%token <typeBool> TkKeywordOr
+%precedence <typeBool> TkKeywordOr
+%precedence <typeBool> TkKeywordAnd
 %token <typeBool> TkKeywordNot
 %token <typeBool> TkKeywordContains
 %token <typeBool> TkKeywordCurrentTime
@@ -57,9 +57,11 @@ import (
 
 %%
 
-prog: bool_exp { result.Eval = $1 }
+prog:
+    bool_exp { result.Eval = $1 }
 
-bool_exp: TkParL bool_exp TkParR { $$ = $2 }
+bool_exp:
+    TkParL bool_exp TkParR { $$ = $2 }
     | bool_exp TkKeywordAnd bool_exp { $$ = $1 && $3 }
     | bool_exp TkKeywordOr bool_exp { $$ = $1 || $3 }
     | TkKeywordNot bool_exp { $$ = !$2 }
@@ -68,9 +70,13 @@ bool_exp: TkParL bool_exp TkParR { $$ = $2 }
     | list_exp TkKeywordContains value { $$ = contains($1, $3) }
     | list_exp TkKeywordNot TkKeywordContains value { $$ = !contains($1, $4) }
 
-list_exp: TkSBktL list TkSBktR { $$ = $2 }
+list_exp:
+    TkSBktL TkSBktR { $$ = []nodeValue{} }
+    |
+    TkSBktL list TkSBktR { $$ = $2 }
 
-value: TkText { $$ = nodeValue{nodeType: valueText, text: $1} }
+value:
+    TkText { $$ = nodeValue{nodeType: valueText, text: $1} }
     | TkNumber
         {
             s := $1
@@ -81,12 +87,8 @@ value: TkText { $$ = nodeValue{nodeType: valueText, text: $1} }
             $$ = nodeValue{nodeType: valueNumber, number: n}
         }
 
-list: /* empty */
-    {
-        valueList = []nodeValue{}
-        $$ = valueList
-    }
-    | value
+list:
+    value
     {
         valueList = []nodeValue{$1}
         $$ = valueList

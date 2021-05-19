@@ -48,8 +48,8 @@ func (t Token) String() string {
 const (
 	TkKeywordTrue TokenType = iota
 	TkKeywordFalse
-	TkKeywordAnd
 	TkKeywordOr
+	TkKeywordAnd
 	TkKeywordNot
 	TkKeywordContains
 	TkKeywordCurrentTime
@@ -75,8 +75,8 @@ const (
 var tokenName = []string{
 	"KW-TRUE",
 	"KW-FALSE",
-	"KW-AND",
 	"KW-OR",
+	"KW-AND",
 	"KW-NOT",
 	"KW-CONTAINS",
 	"KW-CURRENTTIME",
