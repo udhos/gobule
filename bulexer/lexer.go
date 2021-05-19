@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 )
 
 type lexState int
@@ -14,12 +15,14 @@ const (
 	stNumber
 	stText
 	stIdent
+	stEOF
 )
 
 type Lexer struct {
 	reader io.ByteScanner
 	state  lexState
 	buf    bytes.Buffer
+	debug  bool
 }
 
 type TokenType int
@@ -34,7 +37,7 @@ type Token struct {
 }
 
 func (t Token) String() string {
-	return t.Type.Name() + " '" + t.Value + "'"
+	return t.Type.Name() + "(" + t.Value + ")"
 }
 
 const (
@@ -111,16 +114,28 @@ func isLetter(b byte) bool {
 	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
 }
 
+var eof = Token{Type: TkEOF}
+
 func (l *Lexer) Next() Token {
 
 	for {
+		if l.state == stEOF {
+			return eof
+		}
+
 		b, errByte := l.reader.ReadByte()
+
+		if l.debug {
+			log.Printf("state=%d: byte: %d %c err:%v", l.state, b, b, errByte)
+		}
+
 		switch l.state {
 
 		case stBlank:
 			switch errByte {
 			case io.EOF:
-				return Token{Type: TkEOF}
+				l.state = stEOF
+				return eof
 			case nil:
 			default:
 				return Token{Type: TkError, Value: errByte.Error()}
@@ -138,9 +153,6 @@ func (l *Lexer) Next() Token {
 				}
 				l.state = stIdent
 			case b == '\'':
-				if errSave := l.buf.WriteByte(b); errSave != nil {
-					return Token{Type: TkError, Value: errSave.Error()}
-				}
 				l.state = stText
 			case b == '(':
 				return Token{Type: TkParL, Value: "("}
@@ -156,6 +168,7 @@ func (l *Lexer) Next() Token {
 				bb, errBB := l.reader.ReadByte()
 				switch errBB {
 				case io.EOF:
+					l.state = stEOF
 					return Token{Type: TkLT, Value: "<"}
 				case nil:
 				default:
@@ -172,6 +185,7 @@ func (l *Lexer) Next() Token {
 				bb, errBB := l.reader.ReadByte()
 				switch errBB {
 				case io.EOF:
+					l.state = stEOF
 					return Token{Type: TkGT, Value: ">"}
 				case nil:
 				default:
@@ -200,6 +214,7 @@ func (l *Lexer) Next() Token {
 		case stIdent:
 			switch errByte {
 			case io.EOF:
+				l.state = stEOF
 				return l.consumeIdent()
 			case nil:
 			default:
@@ -228,7 +243,8 @@ func (l *Lexer) Next() Token {
 		case stNumber:
 			switch errByte {
 			case io.EOF:
-				return l.consumeIdent()
+				l.state = stEOF
+				return l.consumeNumber()
 			case nil:
 			default:
 				return Token{Type: TkError, Value: errByte.Error()}
@@ -236,7 +252,7 @@ func (l *Lexer) Next() Token {
 			switch {
 			case isBlank(b):
 				l.state = stBlank
-				return l.consume(Token{Type: TkNumber})
+				return l.consumeNumber()
 			case isDigit(b):
 				if errSave := l.buf.WriteByte(b); errSave != nil {
 					return Token{Type: TkError, Value: errSave.Error()}
@@ -248,12 +264,13 @@ func (l *Lexer) Next() Token {
 					return Token{Type: TkError, Value: errUnread.Error()}
 				}
 				l.state = stBlank
-				return l.consumeIdent()
+				return l.consumeNumber()
 			}
 
 		case stText:
 			switch errByte {
 			case io.EOF:
+				l.state = stEOF
 				return Token{Type: TkError, Value: "EOF-after-unterminated-text"}
 			case nil:
 			default:
@@ -287,6 +304,10 @@ var keywords = map[string]TokenType{
 	"CurrentTime": TkKeywordCurrentTime,
 	"Number":      TkKeywordNumber,
 	"List":        TkKeywordList,
+}
+
+func (l *Lexer) consumeNumber() Token {
+	return l.consume(Token{Type: TkNumber})
 }
 
 func (l *Lexer) consumeIdent() Token {
