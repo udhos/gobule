@@ -15,6 +15,7 @@ type lexerTest struct {
 var testTable = []lexerTest{
 	{"empty", "", "EOF()"},
 	{"newline", "\n", "EOF()"},
+	{"dot is not a valid symbol", ".", "ERROR(unexpected byte: 46 '.')"},
 	{"keyword true newline", "true\n", "KW-TRUE(true) EOF()"},
 	{"keyword true", "true", "KW-TRUE(true) EOF()"},
 	{"keyword false", "false", "KW-FALSE(false) EOF()"},
@@ -36,7 +37,8 @@ var testTable = []lexerTest{
 	{"compare3 invalid unequal", "<>", "LT(<) GT(>) EOF()"},
 	{"compare4 invalid unequal", "><", "GT(>) LT(<) EOF()"},
 	{"compare5 double equals", "==", "EQ(=) EQ(=) EOF()"},
-	{"exclamation is not valid symbol", "!", "ERROR(error-after-unexpected:!)"},
+	{"exclamation alone is not valid symbol", "!", "ERROR(error-after-unexpected:!)"},
+	{"exclamation alone is not valid symbol", " ! ", "ERROR(unexpected:!)"},
 	{"all valid symbols", "\n true false AND OR NOT CONTAINS CurrentTime Number List myVar123 123 'not long text' ( ) [ ] < > != = <= >= ",
 		"KW-TRUE(true) KW-FALSE(false) KW-AND(AND) KW-OR(OR) KW-NOT(NOT) KW-CONTAINS(CONTAINS) " +
 			"KW-CURRENTTIME(CurrentTime) KW-NUMBER(Number) KW-LIST(List) IDENT(myVar123) NUMBER(123) " +
