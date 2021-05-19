@@ -7,7 +7,7 @@ package parser
 
 import (
         "fmt"
-        "log"
+        //"log"
         "strconv"
 )
 
@@ -105,6 +105,13 @@ scalar_exp:
         {
             v := $1
             l := yylex.(*Lex)
-            log.Printf("variable: %s=>%s", v, l.vars[v])
+            value := scalar{scalarType: scalarText}
+            if varValue, found := l.vars[v]; found {
+                value.text = varValue
+            } else {
+                value.text = fmt.Sprintf("variable undefined:'%s'", v)
+                yylex.Error(value.text)
+            }
+            $$ = value
         }
 
