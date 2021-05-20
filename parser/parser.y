@@ -70,6 +70,48 @@ bool_exp:
     | TkKeywordFalse { $$ = false }
     | list_exp TkKeywordContains scalar_exp { $$ = contains($1, $3) }
     | list_exp TkKeywordNot TkKeywordContains scalar_exp { $$ = !contains($1, $4) }
+    | scalar_exp TkEQ scalar_exp { $$ = $1.Equals($3) }
+    | scalar_exp TkNE scalar_exp { $$ = !$1.Equals($3) }
+    | scalar_exp TkGT scalar_exp
+        {
+            var eval bool
+            if $1.scalarType != $3.scalarType {
+                yylex.Error("greater-than operator for different types")
+            } else {
+                eval = $1.GreaterThan($3)
+            }
+            $$ = eval
+        }
+    | scalar_exp TkGE scalar_exp
+        {
+            var eval bool
+            if $1.scalarType != $3.scalarType {
+                yylex.Error("greater-than-or-equal operator for different types")
+            } else {
+                eval = $1.GreaterThanOrEqual($3)
+            }
+            $$ = eval
+        }
+    | scalar_exp TkLT scalar_exp
+        {
+            var eval bool
+            if $1.scalarType != $3.scalarType {
+                yylex.Error("less-than operator for different types")
+            } else {
+                eval = $3.GreaterThan($1)
+            }
+            $$ = eval
+        }
+    | scalar_exp TkLE scalar_exp
+        {
+            var eval bool
+            if $1.scalarType != $3.scalarType {
+                yylex.Error("less-than-or-equal operator for different types")
+            } else {
+                eval = $3.GreaterThanOrEqual($1)
+            }
+            $$ = eval
+        }
 
 list_exp:
     TkSBktL TkSBktR { $$ = []scalar{} }

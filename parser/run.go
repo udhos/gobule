@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"bytes"
 	"io"
 	"log"
 
@@ -26,6 +27,11 @@ func Run(input io.Reader, vars map[string]string, debug bool) Result {
 	lex.result.Status = status
 
 	return lex.result
+}
+
+// RunString executes parser for string.
+func RunString(input string, vars map[string]string, debug bool) Result {
+	return Run(bytes.NewBufferString(input), vars, debug)
 }
 
 // Lex provides the lexical scanner interface required by the generated parser.

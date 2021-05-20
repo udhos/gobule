@@ -1,6 +1,28 @@
 # gobule
 Golang Go parser for the Bule Language
 
+## Usage
+
+```
+package main
+
+import (
+	"log"
+
+	"github.com/udhos/gobule/parser"
+)
+
+func main() {
+	var vars = map[string]string{
+		"platform": "android",
+	}
+
+	result := parser.RunString("platform = 'android'", vars, false)
+
+	log.Printf("result: eval=%v status=%d errors=%d last_error: [%s]\n", result.Eval, result.Status, result.Errors, result.LastError)
+}
+```
+
 ## Bule Language
 
 https://github.com/johnowl/owl-rules
