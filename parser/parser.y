@@ -28,6 +28,7 @@ import (
 
 %type <typeBool> bool_exp
 %type <typeScalar> scalar_exp
+//%type <typeString> scalar_text
 %type <typeList> list_exp
 %type <typeList> list
 
@@ -152,6 +153,33 @@ scalar_exp:
                 value.text = varValue
             } else {
                 value.text = fmt.Sprintf("variable undefined:'%s'", v)
+                yylex.Error(value.text)
+            }
+            $$ = value
+        }
+    | TkKeywordNumber TkParL TkText TkParR
+        {
+            s := $3
+            n, errConv := strconv.Atoi(s)
+            if errConv != nil {
+                yylex.Error(fmt.Sprintf("bad Number(text) conversion: '%s': %v", s, errConv))
+            }
+            $$ = scalar{scalarType: scalarNumber, number: n}
+        }
+    | TkKeywordNumber TkParL TkIdent TkParR
+        {
+            v := $3
+            l := yylex.(*Lex)
+            value := scalar{scalarType: scalarNumber}
+            if varValue, found := l.vars[v]; found {
+                // found variable
+                n, errConv := strconv.Atoi(varValue)
+                if errConv != nil {
+                    yylex.Error(fmt.Sprintf("bad Number(variable) conversion: %s='%s': %v", v, varValue, errConv))
+                }
+                value.number = n
+            } else {
+                value.text = fmt.Sprintf("Number() variable undefined:'%s'", v)
                 yylex.Error(value.text)
             }
             $$ = value
