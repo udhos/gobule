@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	vars := map[string]string{
+	vars := map[string]interface{}{
 		"platform": "android",
 	}
 
