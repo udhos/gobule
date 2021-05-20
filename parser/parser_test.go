@@ -70,6 +70,9 @@ var testTable = []parserTest{
 	{"number 7", "Number >= 12", `{}`, expectError},
 	{"number 8", "Number('11')", `{}`, expectError},
 	{"number 9", "Number('bob') < 20", `{}`, expectError},
+	{"currenttime 1", "CurrentTime() > 0", `{}`, expectTrue},
+	{"currenttime 2", "CurrentTime() < 250000", `{}`, expectTrue},
+	{"currenttime 3", "CurrentTime() < 0", `{}`, expectFalse},
 }
 
 func TestParser(t *testing.T) {

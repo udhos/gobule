@@ -9,6 +9,7 @@ import (
         "fmt"
         //"log"
         "strconv"
+        "time"
 )
 
 %}
@@ -183,5 +184,12 @@ scalar_exp:
                 yylex.Error(value.text)
             }
             $$ = value
+        }
+    | TkKeywordCurrentTime TkParL TkParR
+        {
+            now := time.Now()
+            n := now.Hour() * 10000 + now.Minute() * 100 + now.Second()
+            //fmt.Printf("currenttime: %d\n", n)
+            $$ = scalar{scalarType: scalarNumber, number: n}
         }
 
