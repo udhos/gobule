@@ -17,7 +17,7 @@ type Result struct {
 }
 
 // Run executes parser for input.
-func Run(input io.Reader, vars map[string]string, debug bool) Result {
+func Run(input io.Reader, vars map[string]interface{}, debug bool) Result {
 
 	lex := &Lex{lex: bulexer.New(input), debug: debug, vars: vars}
 
@@ -30,7 +30,7 @@ func Run(input io.Reader, vars map[string]string, debug bool) Result {
 }
 
 // RunString executes parser for string.
-func RunString(input string, vars map[string]string, debug bool) Result {
+func RunString(input string, vars map[string]interface{}, debug bool) Result {
 	return Run(bytes.NewBufferString(input), vars, debug)
 }
 
@@ -41,9 +41,9 @@ type Lex struct {
 	debug  bool
 
 	// context data for parser:
-	vars       map[string]string // input variables
-	scalarList []scalar          // aux
-	result     Result            // output
+	vars       map[string]interface{} // input variables
+	scalarList []scalar               // aux
+	result     Result                 // output
 }
 
 // Lex is called by the syntatical parser to request the next token.

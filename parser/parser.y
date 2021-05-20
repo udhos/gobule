@@ -7,6 +7,7 @@ package parser
 
 import (
         "fmt"
+        //"encoding/json"
         //"log"
         "strconv"
         "time"
@@ -119,6 +120,63 @@ list_exp:
     TkSBktL TkSBktR { $$ = []scalar{} }
     |
     TkSBktL list TkSBktR { $$ = $2 }
+    |
+    TkKeywordList TkParL TkText TkParR
+        {
+            var list []scalar
+            {
+                s := $3
+                strList, errParse := parseList(s)
+                if errParse != nil {
+                    yylex.Error(fmt.Sprintf("List(%s): bad list: %v", s, errParse))
+                }
+                for i, elem := range strList {
+                    switch v := elem.(type) {
+                    case int:
+                        list = append(list, scalar{scalarType: scalarNumber, number: v})
+                    case string:
+                        list = append(list, scalar{scalarType: scalarText, text: v})
+                    default:
+                        yylex.Error(fmt.Sprintf("List(%s): invalid type for element %d: %v", s, i, elem))
+                    }
+                }
+            }
+            $$ = list
+        }
+    |
+    TkKeywordList TkParL TkIdent TkParR
+        {
+            var list []scalar
+            v := $3
+            l := yylex.(*Lex)
+            if varValue, found := l.vars[v]; found {
+                // found variable
+
+                if vv, ok := varValue.([]interface{}); ok {
+
+                    for i, elem := range vv {
+                        switch val := elem.(type) {
+                        case float64:
+                            list = append(list, scalar{scalarType: scalarNumber, number: int(val)})
+                        case int:
+                            list = append(list, scalar{scalarType: scalarNumber, number: val})
+                        case string:
+                            list = append(list, scalar{scalarType: scalarText, text: val})
+                        default:
+                            yylex.Error(fmt.Sprintf("List(%s): invalid type for element %d: %v", v, i, elem))
+                    }
+                }
+
+                } else {
+                    yylex.Error(fmt.Sprintf("List(%s): unexpected list type: %v", v, varValue))
+                }
+
+            } else {
+                yylex.Error(fmt.Sprintf("List(%s): variable undefined", v))
+            }
+            $$ = list
+        }
+
 
 list:
     scalar_exp
@@ -151,7 +209,14 @@ scalar_exp:
             l := yylex.(*Lex)
             value := scalar{scalarType: scalarText}
             if varValue, found := l.vars[v]; found {
-                value.text = varValue
+                switch val := varValue.(type) {
+                case string:
+                    value.text = val
+                case int:
+                    value.text = strconv.Itoa(val)
+                default:
+                    yylex.Error(fmt.Sprintf("unexpected variable type: '%s'", v))
+                }
             } else {
                 value.text = fmt.Sprintf("variable undefined:'%s'", v)
                 yylex.Error(value.text)
@@ -174,11 +239,20 @@ scalar_exp:
             value := scalar{scalarType: scalarNumber}
             if varValue, found := l.vars[v]; found {
                 // found variable
-                n, errConv := strconv.Atoi(varValue)
-                if errConv != nil {
-                    yylex.Error(fmt.Sprintf("bad Number(variable) conversion: %s='%s': %v", v, varValue, errConv))
+                switch val := varValue.(type) {
+                case string:
+                    n, errConv := strconv.Atoi(val)
+                    if errConv != nil {
+                        yylex.Error(fmt.Sprintf("bad Number(variable) conversion: %s='%s': %v", v, val, errConv))
+                    }
+                    value.number = n
+                case int:
+                    value.number = val
+                case float64:
+                    value.number = int(val)
+                default:
+                    yylex.Error(fmt.Sprintf("unexpected Number(variable) var type: '%s': %q", v, varValue))
                 }
-                value.number = n
             } else {
                 value.text = fmt.Sprintf("Number() variable undefined:'%s'", v)
                 yylex.Error(value.text)

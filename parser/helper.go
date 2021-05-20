@@ -1,5 +1,11 @@
 package parser
 
+import (
+	"errors"
+	"strconv"
+	"strings"
+)
+
 const (
 	parserTokenIDFirst = TkKeywordTrue
 )
@@ -54,4 +60,37 @@ func contains(list []scalar, wanted scalar) bool {
 		}
 	}
 	return false
+}
+
+func parseList(s string) ([]interface{}, error) {
+
+	var list []interface{}
+
+	s = strings.TrimSpace(s)
+	if len(s) < 2 {
+		return list, errors.New("too short")
+	}
+
+	if s[0] != '[' {
+		return list, errors.New("missing opening square bracket")
+	}
+
+	last := len(s) - 1
+	if s[last] != ']' {
+		return list, errors.New("missing closing square bracket")
+	}
+
+	s = s[1:last]
+
+	fields := strings.Fields(s)
+	for _, f := range fields {
+		n, errConv := strconv.Atoi(f)
+		if errConv == nil {
+			list = append(list, n)
+			continue
+		}
+		list = append(list, f)
+	}
+
+	return list, nil
 }

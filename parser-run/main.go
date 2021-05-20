@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	var vars = map[string]string{
+	var vars = map[string]interface{}{
 		"name":   "John",
 		"number": "123",
 	}

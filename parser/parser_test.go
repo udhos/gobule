@@ -73,13 +73,18 @@ var testTable = []parserTest{
 	{"currenttime 1", "CurrentTime() > 0", `{}`, expectTrue},
 	{"currenttime 2", "CurrentTime() < 250000", `{}`, expectTrue},
 	{"currenttime 3", "CurrentTime() < 0", `{}`, expectFalse},
+	{"list literal", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
+	{"list function 1", "List('[1 2 3 4]') CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
+	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
+	{"list function 3", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectTrue},
+	{"list function 4", "List(var0) CONTAINS var1", `{"var0":["alpha","beta",1,2],"var1":"beta"}`, expectTrue},
 }
 
 func TestParser(t *testing.T) {
 
 	for _, data := range testTable {
 
-		vars := map[string]string{}
+		vars := map[string]interface{}{}
 
 		if errJSON := json.Unmarshal([]byte(data.vars), &vars); errJSON != nil {
 			t.Errorf("%s: json: %v: vars=%s", data.name, errJSON, data.vars)
