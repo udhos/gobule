@@ -1,16 +1,6 @@
 # gobule
 Golang Go parser for the Bule Language
 
-## Build
-
-```
-git clone https://github.com/udhos/gobule
-cd gobule
-go generate ./parser ;# generate parser
-go test ./parser     ;# run tests
-go install ./parser  ;# build
-```
-
 ## Usage
 
 ```
@@ -31,6 +21,18 @@ func main() {
 
 	log.Printf("result: eval=%v status=%d errors=%d last_error: [%s]\n", result.Eval, result.Status, result.Errors, result.LastError)
 }
+```
+
+## Build
+
+Use this recipe if you need to build the parser for development.
+
+```
+git clone https://github.com/udhos/gobule
+cd gobule
+go generate ./parser ;# generate parser
+go test ./parser     ;# run tests
+go install ./parser  ;# build
 ```
 
 ## Bule Language
