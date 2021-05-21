@@ -1,6 +1,16 @@
 # gobule
 Golang Go parser for the Bule Language
 
+## Build
+
+```
+git clone https://github.com/udhos/gobule
+cd gobule
+go generate ./parser ;# generate parser
+go test ./parser     ;# run tests
+go install ./parser  ;# build
+```
+
 ## Usage
 
 ```
