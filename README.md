@@ -1,4 +1,8 @@
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/udhos/gobule/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/udhos/gobule)](https://goreportcard.com/report/github.com/udhos/gobule)
+
 # gobule
+
 Golang Go parser for the Bule Language
 
 ## Usage
