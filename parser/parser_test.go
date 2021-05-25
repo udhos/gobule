@@ -96,7 +96,7 @@ func TestParser(t *testing.T) {
 
 		if data.expectedResult == expectError {
 			// error expected
-			if result.Status == 0 && result.Errors == 0 {
+			if !result.IsError() {
 				// no error
 				t.Errorf("%s: input=[%s] expected=ERROR got: status=%d errors=%d error:%s\n",
 					data.name, data.input, result.Status, result.Errors, result.LastError)
