@@ -8,6 +8,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/udhos/gobule/parser"
 )
@@ -17,9 +18,19 @@ func main() {
 		"platform": "android",
 	}
 
-	result := parser.RunString("platform = 'android'", vars, false)
+	envDebug := os.Getenv("DEBUG")
+	debug := envDebug != ""
 
-	log.Printf("result: eval=%v status=%d errors=%d last_error: [%s]\n", result.Eval, result.Status, result.Errors, result.LastError)
+	log.Printf("DEBUG=[%s] debug=%v", envDebug, debug)
+
+	result := parser.RunString("platform = 'android'", vars, debug)
+
+	if result.IsError() {
+		log.Printf("ERROR status=%d errors=%d last_error: [%s]\n", result.Status, result.Errors, result.LastError)
+		return
+	}
+
+	log.Printf("result: %v", result.Eval)
 }
 ```
 

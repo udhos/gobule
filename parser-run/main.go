@@ -13,11 +13,19 @@ func main() {
 		"number": "123",
 	}
 
-	log.Printf("FIXME vars: %v", vars)
+	log.Printf("FIXME input vars: %v", vars)
 
-	debug := false
+	envDebug := os.Getenv("DEBUG")
+	debug := envDebug != ""
+
+	log.Printf("DEBUG=[%s] debug=%v", envDebug, debug)
 
 	result := parser.Run(os.Stdin, vars, debug)
 
-	log.Printf("result: eval=%v status=%d errors=%d last_error: [%s]\n", result.Eval, result.Status, result.Errors, result.LastError)
+	if result.IsError() {
+		log.Printf("ERROR status=%d errors=%d last_error: [%s]\n", result.Status, result.Errors, result.LastError)
+		return
+	}
+
+	log.Printf("result: %v", result.Eval)
 }

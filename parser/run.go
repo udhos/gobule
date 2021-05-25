@@ -10,10 +10,15 @@ import (
 
 // Result returns parser result.
 type Result struct {
-	Eval      bool
-	Errors    int
-	Status    int
-	LastError string
+	Eval      bool   // evaluation result
+	Errors    int    // number of non-syntactic errors
+	Status    int    // parser status is 0 <=> 0 syntax erros
+	LastError string // record last error message
+}
+
+// IsError is a helper method to check for parser errors.
+func (r Result) IsError() bool {
+	return r.Status != 0 || r.Errors != 0
 }
 
 // Run executes parser for input.
