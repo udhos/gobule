@@ -60,7 +60,7 @@ https://github.com/johnowl/owl-rules/blob/master/src/main/kotlin/com/johnowl/rul
 
 ## Syntax Analyser Generators
 
-### ModernC goyac
+### ModernC goyacc
 
     go get modernc.org/goyacc
 
