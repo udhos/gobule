@@ -1,5 +1,6 @@
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/udhos/gobule/blob/main/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/udhos/gobule)](https://goreportcard.com/report/github.com/udhos/gobule)
+[![Go Reference](https://pkg.go.dev/badge/github.com/udhos/gobule.svg)](https://pkg.go.dev/github.com/udhos/gobule)
 
 # gobule
 
