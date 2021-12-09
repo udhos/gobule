@@ -91,7 +91,7 @@ bool_exp:
             if $1.scalarType != $3.scalarType {
                 yylex.Error("greater-than-or-equal operator for different types")
             } else {
-                eval = $1.GreaterThanOrEqual($3)
+                eval = !$3.GreaterThan($1)
             }
             $$ = eval
         }
@@ -111,7 +111,7 @@ bool_exp:
             if $1.scalarType != $3.scalarType {
                 yylex.Error("less-than-or-equal operator for different types")
             } else {
-                eval = $3.GreaterThanOrEqual($1)
+                eval = !$1.GreaterThan($3)
             }
             $$ = eval
         }

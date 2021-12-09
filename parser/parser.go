@@ -522,7 +522,7 @@ yynewstate:
 			if yyS[yypt-2].typeScalar.scalarType != yyS[yypt-0].typeScalar.scalarType {
 				yylex.Error("greater-than-or-equal operator for different types")
 			} else {
-				eval = yyS[yypt-2].typeScalar.GreaterThanOrEqual(yyS[yypt-0].typeScalar)
+				eval = !yyS[yypt-0].typeScalar.GreaterThan(yyS[yypt-2].typeScalar)
 			}
 			yyVAL.typeBool = eval
 		}
@@ -542,7 +542,7 @@ yynewstate:
 			if yyS[yypt-2].typeScalar.scalarType != yyS[yypt-0].typeScalar.scalarType {
 				yylex.Error("less-than-or-equal operator for different types")
 			} else {
-				eval = yyS[yypt-0].typeScalar.GreaterThanOrEqual(yyS[yypt-2].typeScalar)
+				eval = !yyS[yypt-2].typeScalar.GreaterThan(yyS[yypt-0].typeScalar)
 			}
 			yyVAL.typeBool = eval
 		}
