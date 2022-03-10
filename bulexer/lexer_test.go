@@ -50,6 +50,7 @@ var testTable = []lexerTest{
 	{"long expression", "NOT [ 1 b 'c' ] NOT CONTAINS Number('3')",
 		"KW-NOT(NOT) LSBKT([) NUMBER(1) IDENT(b) TEXT(c) RSBKT(]) KW-NOT(NOT) KW-CONTAINS(CONTAINS) KW-NUMBER(Number) LPAR(() TEXT(3) RPAR()) EOF()"},
 	{"can concat some symbols", "true'text'123(var'text2'false", "KW-TRUE(true) TEXT(text) NUMBER(123) LPAR(() IDENT(var) TEXT(text2) KW-FALSE(false) EOF()"},
+	{"version number", "Version(1.2.3)", "KW-VERSION(Version) LPAR(() NUMBER(1) DOT(.) NUMBER(2) DOT(.) NUMBER(3) RPAR()) EOF()"},
 }
 
 func TestScanner(t *testing.T) {

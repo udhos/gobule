@@ -27,12 +27,13 @@ type yyXError struct {
 }
 
 const (
-	yyDefault            = 57368
+	yyDefault            = 57370
 	yyEofCode            = 57344
-	TkEQ                 = 57362
-	TkGE                 = 57366
-	TkGT                 = 57364
-	TkIdent              = 57357
+	TkDot                = 57369
+	TkEQ                 = 57363
+	TkGE                 = 57367
+	TkGT                 = 57365
+	TkIdent              = 57358
 	TkKeywordAnd         = 57349
 	TkKeywordContains    = 57351
 	TkKeywordCurrentTime = 57352
@@ -42,19 +43,20 @@ const (
 	TkKeywordNumber      = 57353
 	TkKeywordOr          = 57348
 	TkKeywordTrue        = 57346
-	TkLE                 = 57367
-	TkLT                 = 57363
-	TkNE                 = 57365
-	TkNumber             = 57355
-	TkParL               = 57358
-	TkParR               = 57359
-	TkSBktL              = 57360
-	TkSBktR              = 57361
-	TkText               = 57356
+	TkKeywordVersion     = 57355
+	TkLE                 = 57368
+	TkLT                 = 57364
+	TkNE                 = 57366
+	TkNumber             = 57356
+	TkParL               = 57359
+	TkParR               = 57360
+	TkSBktL              = 57361
+	TkSBktR              = 57362
+	TkText               = 57357
 	yyErrCode            = 57345
 
 	yyMaxDepth = 200
-	yyTabOfs   = -28
+	yyTabOfs   = -29
 )
 
 var (
@@ -64,51 +66,54 @@ var (
 	}
 
 	yyXLAT = map[int]int{
-		57359: 0,  // TkParR (26x)
-		57357: 1,  // TkIdent (25x)
-		57356: 2,  // TkText (25x)
-		57352: 3,  // TkKeywordCurrentTime (23x)
-		57353: 4,  // TkKeywordNumber (23x)
-		57355: 5,  // TkNumber (23x)
-		57344: 6,  // $end (22x)
-		57349: 7,  // TkKeywordAnd (22x)
-		57348: 8,  // TkKeywordOr (22x)
-		57373: 9,  // scalar_exp (15x)
-		57350: 10, // TkKeywordNot (10x)
-		57361: 11, // TkSBktR (10x)
-		57358: 12, // TkParL (8x)
-		57362: 13, // TkEQ (7x)
-		57366: 14, // TkGE (7x)
-		57364: 15, // TkGT (7x)
-		57367: 16, // TkLE (7x)
-		57363: 17, // TkLT (7x)
-		57365: 18, // TkNE (7x)
-		57351: 19, // TkKeywordContains (6x)
-		57369: 20, // bool_exp (5x)
-		57371: 21, // list_exp (5x)
-		57347: 22, // TkKeywordFalse (5x)
-		57354: 23, // TkKeywordList (5x)
-		57346: 24, // TkKeywordTrue (5x)
-		57360: 25, // TkSBktL (5x)
-		57370: 26, // list (1x)
-		57372: 27, // prog (1x)
-		57368: 28, // $default (0x)
-		57345: 29, // error (0x)
+		57360: 0,  // TkParR (28x)
+		57356: 1,  // TkNumber (27x)
+		57358: 2,  // TkIdent (26x)
+		57357: 3,  // TkText (26x)
+		57352: 4,  // TkKeywordCurrentTime (24x)
+		57353: 5,  // TkKeywordNumber (24x)
+		57355: 6,  // TkKeywordVersion (24x)
+		57344: 7,  // $end (23x)
+		57349: 8,  // TkKeywordAnd (23x)
+		57348: 9,  // TkKeywordOr (23x)
+		57375: 10, // scalar_exp (15x)
+		57362: 11, // TkSBktR (11x)
+		57350: 12, // TkKeywordNot (10x)
+		57359: 13, // TkParL (9x)
+		57363: 14, // TkEQ (8x)
+		57367: 15, // TkGE (8x)
+		57365: 16, // TkGT (8x)
+		57368: 17, // TkLE (8x)
+		57364: 18, // TkLT (8x)
+		57366: 19, // TkNE (8x)
+		57351: 20, // TkKeywordContains (6x)
+		57371: 21, // bool_exp (5x)
+		57373: 22, // list_exp (5x)
+		57347: 23, // TkKeywordFalse (5x)
+		57354: 24, // TkKeywordList (5x)
+		57346: 25, // TkKeywordTrue (5x)
+		57361: 26, // TkSBktL (5x)
+		57369: 27, // TkDot (2x)
+		57372: 28, // list (1x)
+		57374: 29, // prog (1x)
+		57370: 30, // $default (0x)
+		57345: 31, // error (0x)
 	}
 
 	yySymNames = []string{
 		"TkParR",
+		"TkNumber",
 		"TkIdent",
 		"TkText",
 		"TkKeywordCurrentTime",
 		"TkKeywordNumber",
-		"TkNumber",
+		"TkKeywordVersion",
 		"$end",
 		"TkKeywordAnd",
 		"TkKeywordOr",
 		"scalar_exp",
-		"TkKeywordNot",
 		"TkSBktR",
+		"TkKeywordNot",
 		"TkParL",
 		"TkEQ",
 		"TkGE",
@@ -123,6 +128,7 @@ var (
 		"TkKeywordList",
 		"TkKeywordTrue",
 		"TkSBktL",
+		"TkDot",
 		"list",
 		"prog",
 		"$default",
@@ -133,107 +139,117 @@ var (
 
 	yyReductions = map[int]struct{ xsym, components int }{
 		0:  {0, 1},
-		1:  {27, 1},
-		2:  {20, 3},
-		3:  {20, 3},
-		4:  {20, 3},
-		5:  {20, 2},
-		6:  {20, 1},
-		7:  {20, 1},
-		8:  {20, 3},
-		9:  {20, 4},
-		10: {20, 3},
-		11: {20, 3},
-		12: {20, 3},
-		13: {20, 3},
-		14: {20, 3},
-		15: {20, 3},
-		16: {21, 2},
-		17: {21, 3},
-		18: {21, 4},
-		19: {21, 4},
-		20: {26, 1},
-		21: {26, 2},
-		22: {9, 1},
-		23: {9, 1},
-		24: {9, 1},
-		25: {9, 4},
-		26: {9, 4},
-		27: {9, 3},
+		1:  {29, 1},
+		2:  {21, 3},
+		3:  {21, 3},
+		4:  {21, 3},
+		5:  {21, 2},
+		6:  {21, 1},
+		7:  {21, 1},
+		8:  {21, 3},
+		9:  {21, 4},
+		10: {21, 3},
+		11: {21, 3},
+		12: {21, 3},
+		13: {21, 3},
+		14: {21, 3},
+		15: {21, 3},
+		16: {22, 2},
+		17: {22, 3},
+		18: {22, 4},
+		19: {22, 4},
+		20: {28, 1},
+		21: {28, 2},
+		22: {10, 1},
+		23: {10, 1},
+		24: {10, 1},
+		25: {10, 8},
+		26: {10, 4},
+		27: {10, 4},
+		28: {10, 3},
 	}
 
 	yyXErrors = map[yyXError]string{}
 
-	yyParseTab = [57][]uint8{
+	yyParseTab = [65][]uint8{
 		// 0
-		{1: 41, 39, 43, 42, 40, 9: 36, 32, 12: 31, 20: 30, 35, 34, 38, 33, 37, 27: 29},
-		{6: 28},
-		{6: 27, 79, 80},
-		{1: 41, 39, 43, 42, 40, 9: 36, 32, 12: 31, 20: 83, 35, 34, 38, 33, 37},
-		{1: 41, 39, 43, 42, 40, 9: 36, 32, 12: 31, 20: 78, 35, 34, 38, 33, 37},
+		{1: 41, 42, 40, 45, 44, 43, 10: 37, 12: 33, 32, 21: 31, 36, 35, 39, 34, 38, 29: 30},
+		{7: 29},
+		{7: 28, 88, 89},
+		{1: 41, 42, 40, 45, 44, 43, 10: 37, 12: 33, 32, 21: 92, 36, 35, 39, 34, 38},
+		{1: 41, 42, 40, 45, 44, 43, 10: 37, 12: 33, 32, 21: 87, 36, 35, 39, 34, 38},
 		// 5
-		{22, 6: 22, 22, 22},
-		{21, 6: 21, 21, 21},
-		{10: 74, 19: 73},
-		{13: 61, 64, 63, 66, 65, 62},
-		{1: 41, 39, 43, 42, 40, 9: 58, 11: 56, 26: 57},
+		{23, 7: 23, 23, 23},
+		{22, 7: 22, 22, 22},
+		{12: 83, 20: 82},
+		{14: 70, 73, 72, 75, 74, 71},
+		{1: 41, 42, 40, 45, 44, 43, 10: 67, 65, 28: 66},
 		// 10
-		{12: 51},
-		{6, 6, 6, 6, 6, 6, 6, 6, 6, 11: 6, 13: 6, 6, 6, 6, 6, 6},
-		{5, 5, 5, 5, 5, 5, 5, 5, 5, 11: 5, 13: 5, 5, 5, 5, 5, 5},
-		{4, 4, 4, 4, 4, 4, 4, 4, 4, 11: 4, 13: 4, 4, 4, 4, 4, 4},
-		{12: 46},
+		{13: 60},
+		{7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 11: 7, 14: 7, 7, 7, 7, 7, 7},
+		{6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 11: 6, 14: 6, 6, 6, 6, 6, 6},
+		{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 11: 5, 14: 5, 5, 5, 5, 5, 5},
+		{13: 53},
 		// 15
-		{12: 44},
-		{45},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 11: 1, 13: 1, 1, 1, 1, 1, 1},
-		{1: 48, 47},
-		{50},
+		{13: 48},
+		{13: 46},
+		{47},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 11: 1, 14: 1, 1, 1, 1, 1, 1},
+		{2: 50, 49},
 		// 20
-		{49},
-		{2, 2, 2, 2, 2, 2, 2, 2, 2, 11: 2, 13: 2, 2, 2, 2, 2, 2},
-		{3, 3, 3, 3, 3, 3, 3, 3, 3, 11: 3, 13: 3, 3, 3, 3, 3, 3},
-		{1: 53, 52},
-		{55},
+		{52},
+		{51},
+		{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 11: 2, 14: 2, 2, 2, 2, 2, 2},
+		{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 11: 3, 14: 3, 3, 3, 3, 3, 3},
+		{1: 54},
 		// 25
-		{54},
-		{10: 9, 19: 9},
-		{10: 10, 19: 10},
-		{10: 12, 19: 12},
-		{1: 41, 39, 43, 42, 40, 9: 60, 11: 59},
+		{27: 55},
+		{1: 56},
+		{27: 57},
+		{1: 58},
+		{59},
 		// 30
-		{1: 8, 8, 8, 8, 8, 11: 8},
-		{10: 11, 19: 11},
-		{1: 7, 7, 7, 7, 7, 11: 7},
-		{1: 41, 39, 43, 42, 40, 9: 72},
-		{1: 41, 39, 43, 42, 40, 9: 71},
+		{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 11: 4, 14: 4, 4, 4, 4, 4, 4},
+		{2: 62, 61},
+		{64},
+		{63},
+		{12: 10, 20: 10},
 		// 35
-		{1: 41, 39, 43, 42, 40, 9: 70},
-		{1: 41, 39, 43, 42, 40, 9: 69},
-		{1: 41, 39, 43, 42, 40, 9: 68},
-		{1: 41, 39, 43, 42, 40, 9: 67},
-		{13, 6: 13, 13, 13},
+		{12: 11, 20: 11},
+		{12: 13, 20: 13},
+		{1: 41, 42, 40, 45, 44, 43, 10: 69, 68},
+		{1: 9, 9, 9, 9, 9, 9, 11: 9},
+		{12: 12, 20: 12},
 		// 40
-		{14, 6: 14, 14, 14},
-		{15, 6: 15, 15, 15},
-		{16, 6: 16, 16, 16},
-		{17, 6: 17, 17, 17},
-		{18, 6: 18, 18, 18},
+		{1: 8, 8, 8, 8, 8, 8, 11: 8},
+		{1: 41, 42, 40, 45, 44, 43, 10: 81},
+		{1: 41, 42, 40, 45, 44, 43, 10: 80},
+		{1: 41, 42, 40, 45, 44, 43, 10: 79},
+		{1: 41, 42, 40, 45, 44, 43, 10: 78},
 		// 45
-		{1: 41, 39, 43, 42, 40, 9: 77},
-		{19: 75},
-		{1: 41, 39, 43, 42, 40, 9: 76},
-		{19, 6: 19, 19, 19},
-		{20, 6: 20, 20, 20},
+		{1: 41, 42, 40, 45, 44, 43, 10: 77},
+		{1: 41, 42, 40, 45, 44, 43, 10: 76},
+		{14, 7: 14, 14, 14},
+		{15, 7: 15, 15, 15},
+		{16, 7: 16, 16, 16},
 		// 50
-		{23, 6: 23, 79, 80},
-		{1: 41, 39, 43, 42, 40, 9: 36, 32, 12: 31, 20: 82, 35, 34, 38, 33, 37},
-		{1: 41, 39, 43, 42, 40, 9: 36, 32, 12: 31, 20: 81, 35, 34, 38, 33, 37},
-		{24, 6: 24, 79, 80},
-		{25, 6: 25, 79, 25},
+		{17, 7: 17, 17, 17},
+		{18, 7: 18, 18, 18},
+		{19, 7: 19, 19, 19},
+		{1: 41, 42, 40, 45, 44, 43, 10: 86},
+		{20: 84},
 		// 55
-		{84, 7: 79, 80},
-		{26, 6: 26, 26, 26},
+		{1: 41, 42, 40, 45, 44, 43, 10: 85},
+		{20, 7: 20, 20, 20},
+		{21, 7: 21, 21, 21},
+		{24, 7: 24, 88, 89},
+		{1: 41, 42, 40, 45, 44, 43, 10: 37, 12: 33, 32, 21: 91, 36, 35, 39, 34, 38},
+		// 60
+		{1: 41, 42, 40, 45, 44, 43, 10: 37, 12: 33, 32, 21: 90, 36, 35, 39, 34, 38},
+		{25, 7: 25, 88, 89},
+		{26, 7: 26, 88, 26},
+		{93, 8: 88, 89},
+		{27, 7: 27, 27, 27},
 	}
 )
 
@@ -274,7 +290,7 @@ func yylex1(yylex yyLexer, lval *yySymType) (n int) {
 }
 
 func yyParse(yylex yyLexer) int {
-	const yyError = 29
+	const yyError = 31
 
 	yyEx, _ := yylex.(yyLexerEx)
 	var yyn int
@@ -565,7 +581,9 @@ yynewstate:
 				}
 				for i, elem := range strList {
 					switch v := elem.(type) {
-					case int:
+					//case int:
+					//    list = append(list, scalar{scalarType: scalarNumber, number: int64(v)})
+					case int64:
 						list = append(list, scalar{scalarType: scalarNumber, number: v})
 					case string:
 						list = append(list, scalar{scalarType: scalarText, text: v})
@@ -589,9 +607,9 @@ yynewstate:
 					for i, elem := range vv {
 						switch val := elem.(type) {
 						case float64:
-							list = append(list, scalar{scalarType: scalarNumber, number: int(val)})
+							list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
 						case int:
-							list = append(list, scalar{scalarType: scalarNumber, number: val})
+							list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
 						case string:
 							list = append(list, scalar{scalarType: scalarText, text: val})
 						default:
@@ -627,7 +645,7 @@ yynewstate:
 	case 23:
 		{
 			s := yyS[yypt-0].typeString
-			n, errConv := strconv.Atoi(s)
+			n, errConv := parseInt(s)
 			if errConv != nil {
 				yylex.Error(fmt.Sprintf("bad number conversion: '%s': %v", s, errConv))
 			}
@@ -655,14 +673,35 @@ yynewstate:
 		}
 	case 25:
 		{
+			s1 := yyS[yypt-5].typeString
+			s2 := yyS[yypt-3].typeString
+			s3 := yyS[yypt-1].typeString
+
+			v1, errConv1 := parseInt(s1)
+			if errConv1 != nil {
+				yylex.Error(fmt.Sprintf("bad Version(version) number conversion 1: '%s': %v", s1, errConv1))
+			}
+			v2, errConv2 := parseInt(s2)
+			if errConv2 != nil {
+				yylex.Error(fmt.Sprintf("bad Version(version) number conversion 2: '%s': %v", s2, errConv2))
+			}
+			v3, errConv3 := parseInt(s3)
+			if errConv3 != nil {
+				yylex.Error(fmt.Sprintf("bad Version(version) number conversion 3: '%s': %v", s3, errConv3))
+			}
+
+			yyVAL.typeScalar = scalar{scalarType: scalarNumber, number: v1*1000000 + v2*1000 + v3}
+		}
+	case 26:
+		{
 			s := yyS[yypt-1].typeString
-			n, errConv := strconv.Atoi(s)
+			n, errConv := parseInt(s)
 			if errConv != nil {
 				yylex.Error(fmt.Sprintf("bad Number(text) conversion: '%s': %v", s, errConv))
 			}
 			yyVAL.typeScalar = scalar{scalarType: scalarNumber, number: n}
 		}
-	case 26:
+	case 27:
 		{
 			v := yyS[yypt-1].typeString
 			l := yylex.(*Lex)
@@ -671,15 +710,15 @@ yynewstate:
 				// found variable
 				switch val := varValue.(type) {
 				case string:
-					n, errConv := strconv.Atoi(val)
+					n, errConv := parseInt(val)
 					if errConv != nil {
 						yylex.Error(fmt.Sprintf("bad Number(variable) conversion: %s='%s': %v", v, val, errConv))
 					}
 					value.number = n
 				case int:
-					value.number = val
+					value.number = int64(val)
 				case float64:
-					value.number = int(val)
+					value.number = int64(val)
 				default:
 					yylex.Error(fmt.Sprintf("unexpected Number(variable) var type: '%s': %q", v, varValue))
 				}
@@ -689,12 +728,12 @@ yynewstate:
 			}
 			yyVAL.typeScalar = value
 		}
-	case 27:
+	case 28:
 		{
 			now := time.Now()
 			n := now.Hour()*10000 + now.Minute()*100 + now.Second()
 			//fmt.Printf("currenttime: %d\n", n)
-			yyVAL.typeScalar = scalar{scalarType: scalarNumber, number: n}
+			yyVAL.typeScalar = scalar{scalarType: scalarNumber, number: int64(n)}
 		}
 
 	}

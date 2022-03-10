@@ -45,6 +45,7 @@ import (
 %token <typeBool> TkKeywordCurrentTime
 %token <typeBool> TkKeywordNumber
 %token <typeBool> TkKeywordList
+%token <typeBool> TkKeywordVersion
 %token <typeString> TkNumber
 %token <typeString> TkText
 %token <typeString> TkIdent
@@ -58,6 +59,7 @@ import (
 %token <typeBool> TkNE
 %token <typeBool> TkGE
 %token <typeBool> TkLE
+%token <typeBool> TkDot
 
 %%
 
@@ -132,7 +134,9 @@ list_exp:
                 }
                 for i, elem := range strList {
                     switch v := elem.(type) {
-                    case int:
+                    //case int:
+                    //    list = append(list, scalar{scalarType: scalarNumber, number: int64(v)})
+                    case int64:
                         list = append(list, scalar{scalarType: scalarNumber, number: v})
                     case string:
                         list = append(list, scalar{scalarType: scalarText, text: v})
@@ -157,9 +161,9 @@ list_exp:
                     for i, elem := range vv {
                         switch val := elem.(type) {
                         case float64:
-                            list = append(list, scalar{scalarType: scalarNumber, number: int(val)})
+                            list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
                         case int:
-                            list = append(list, scalar{scalarType: scalarNumber, number: val})
+                            list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
                         case string:
                             list = append(list, scalar{scalarType: scalarText, text: val})
                         default:
@@ -197,7 +201,7 @@ scalar_exp:
     | TkNumber
         {
             s := $1
-            n, errConv := strconv.Atoi(s)
+            n, errConv := parseInt(s)
             if errConv != nil {
                 yylex.Error(fmt.Sprintf("bad number conversion: '%s': %v", s, errConv))
             }
@@ -223,10 +227,31 @@ scalar_exp:
             }
             $$ = value
         }
+    | TkKeywordVersion TkParL TkNumber TkDot TkNumber TkDot TkNumber TkParR
+        {
+            s1 := $3
+            s2 := $5
+            s3 := $7
+
+            v1, errConv1 := parseInt(s1)
+            if errConv1 != nil {
+                yylex.Error(fmt.Sprintf("bad Version(version) number conversion 1: '%s': %v", s1, errConv1))
+            }
+            v2, errConv2 := parseInt(s2)
+            if errConv2 != nil {
+                yylex.Error(fmt.Sprintf("bad Version(version) number conversion 2: '%s': %v", s2, errConv2))
+            }
+            v3, errConv3 := parseInt(s3)
+            if errConv3 != nil {
+                yylex.Error(fmt.Sprintf("bad Version(version) number conversion 3: '%s': %v", s3, errConv3))
+            }
+
+            $$ = scalar{scalarType: scalarNumber, number: v1 * 1000000 + v2 * 1000 + v3}
+        }
     | TkKeywordNumber TkParL TkText TkParR
         {
             s := $3
-            n, errConv := strconv.Atoi(s)
+            n, errConv := parseInt(s)
             if errConv != nil {
                 yylex.Error(fmt.Sprintf("bad Number(text) conversion: '%s': %v", s, errConv))
             }
@@ -241,15 +266,15 @@ scalar_exp:
                 // found variable
                 switch val := varValue.(type) {
                 case string:
-                    n, errConv := strconv.Atoi(val)
+                    n, errConv := parseInt(val)
                     if errConv != nil {
                         yylex.Error(fmt.Sprintf("bad Number(variable) conversion: %s='%s': %v", v, val, errConv))
                     }
                     value.number = n
                 case int:
-                    value.number = val
+                    value.number = int64(val)
                 case float64:
-                    value.number = int(val)
+                    value.number = int64(val)
                 default:
                     yylex.Error(fmt.Sprintf("unexpected Number(variable) var type: '%s': %q", v, varValue))
                 }
@@ -264,6 +289,6 @@ scalar_exp:
             now := time.Now()
             n := now.Hour() * 10000 + now.Minute() * 100 + now.Second()
             //fmt.Printf("currenttime: %d\n", n)
-            $$ = scalar{scalarType: scalarNumber, number: n}
+            $$ = scalar{scalarType: scalarNumber, number: int64(n)}
         }
 

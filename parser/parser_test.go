@@ -78,6 +78,16 @@ var testTable = []parserTest{
 	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
 	{"list function 3", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectTrue},
 	{"list function 4", "List(var0) CONTAINS var1", `{"var0":["alpha","beta",1,2],"var1":"beta"}`, expectTrue},
+	{"version 1", "Number('001001128') = Version(1.1.128)", `{}`, expectTrue},
+	{"version 2", "Number('001001129') > Version(1.1.128)", `{}`, expectTrue},
+	{"version 3", "Number('001001127') < Version(1.1.128)", `{}`, expectTrue},
+	{"version 4", "Number('001002000') > Version(1.1.128)", `{}`, expectTrue},
+	{"version 5", "Number('001000999') < Version(1.1.128)", `{}`, expectTrue},
+	{"version 6", "Number(appVersion) = Version(1.1.128)", `{"appVersion":"001001128"}`, expectTrue},
+	{"version 7", "Number(appVersion) > Version(1.1.128)", `{"appVersion":"001001129"}`, expectTrue},
+	{"version 8", "Number(appVersion) < Version(1.1.128)", `{"appVersion":"001001127"}`, expectTrue},
+	{"version 9", "Number(appVersion) > Version(1.1.128)", `{"appVersion":"001002000"}`, expectTrue},
+	{"version 10", "Number(appVersion) < Version(1.1.128)", `{"appVersion":"001000999"}`, expectTrue},
 }
 
 func TestParser(t *testing.T) {

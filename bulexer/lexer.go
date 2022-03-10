@@ -15,6 +15,7 @@ const (
 	stNumber
 	stText
 	stIdent
+	stDot
 	stEOF
 )
 
@@ -55,6 +56,7 @@ const (
 	TkKeywordCurrentTime
 	TkKeywordNumber
 	TkKeywordList
+	TkKeywordVersion
 	TkNumber
 	TkText
 	TkIdent
@@ -68,6 +70,7 @@ const (
 	TkNE
 	TkGE
 	TkLE
+	TkDot
 	TkError
 	TkEOF
 )
@@ -82,6 +85,7 @@ var tokenName = []string{
 	"KW-CURRENTTIME",
 	"KW-NUMBER",
 	"KW-LIST",
+	"KW-VERSION",
 	"NUMBER",
 	"TEXT",
 	"IDENT",
@@ -95,6 +99,7 @@ var tokenName = []string{
 	"NE",
 	"GE",
 	"LE",
+	"DOT",
 	"ERROR",
 	"EOF",
 }
@@ -255,6 +260,9 @@ SCANNER:
 				return Token{Type: TkError, Value: errByte.Error()}
 			}
 			switch {
+			case b == '.':
+				l.state = stDot
+				return l.consumeNumber()
 			case isBlank(b):
 				l.state = stBlank
 				return l.consumeNumber()
@@ -270,6 +278,26 @@ SCANNER:
 				}
 				l.state = stBlank
 				return l.consumeNumber()
+			}
+
+		case stDot:
+			switch errByte {
+			case io.EOF:
+				l.state = stEOF
+				return Token{Type: TkError, Value: "EOF-after-version-dot"}
+			case nil:
+			default:
+				return Token{Type: TkError, Value: errByte.Error()}
+			}
+			switch {
+			case isDigit(b):
+				if errUnread := l.reader.UnreadByte(); errUnread != nil {
+					return Token{Type: TkError, Value: errUnread.Error()}
+				}
+				l.state = stNumber
+				return Token{Type: TkDot, Value: "."}
+			default:
+				return Token{Type: TkError, Value: fmt.Sprintf("non-digit byte after version dot: %d '%c'", b, b)}
 			}
 
 		case stText:
@@ -309,6 +337,7 @@ var keywords = map[string]TokenType{
 	"CurrentTime": TkKeywordCurrentTime,
 	"Number":      TkKeywordNumber,
 	"List":        TkKeywordList,
+	"Version":     TkKeywordVersion,
 }
 
 func (l *Lexer) consumeNumber() Token {

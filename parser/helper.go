@@ -20,7 +20,7 @@ const (
 type scalar struct {
 	scalarType sType
 	text       string
-	number     int
+	number     int64
 }
 
 func (s scalar) GreaterThan(ss scalar) bool {
@@ -84,7 +84,7 @@ func parseList(s string) ([]interface{}, error) {
 
 	fields := strings.Fields(s)
 	for _, f := range fields {
-		n, errConv := strconv.Atoi(f)
+		n, errConv := parseInt(f)
 		if errConv == nil {
 			list = append(list, n)
 			continue
@@ -93,4 +93,8 @@ func parseList(s string) ([]interface{}, error) {
 	}
 
 	return list, nil
+}
+
+func parseInt(s string) (int64, error) {
+	return strconv.ParseInt(s, 10, 64)
 }
