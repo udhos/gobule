@@ -11,6 +11,8 @@ import (
         //"log"
         "strconv"
         "time"
+
+        "github.com/udhos/gobule/conv"
 )
 
 %}
@@ -246,7 +248,7 @@ scalar_exp:
                 yylex.Error(fmt.Sprintf("bad Version(version) number conversion 3: '%s': %v", s3, errConv3))
             }
 
-            $$ = scalar{scalarType: scalarNumber, number: v1 * 1000000 + v2 * 1000 + v3}
+            $$ = scalar{scalarType: scalarNumber, number: conv.VersionToNumber(v1, v2, v3) }
         }
     | TkKeywordNumber TkParL TkText TkParR
         {

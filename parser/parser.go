@@ -12,6 +12,8 @@ import (
 	//"log"
 	"strconv"
 	"time"
+
+	"github.com/udhos/gobule/conv"
 )
 
 type yySymType struct {
@@ -690,7 +692,7 @@ yynewstate:
 				yylex.Error(fmt.Sprintf("bad Version(version) number conversion 3: '%s': %v", s3, errConv3))
 			}
 
-			yyVAL.typeScalar = scalar{scalarType: scalarNumber, number: v1*1000000 + v2*1000 + v3}
+			yyVAL.typeScalar = scalar{scalarType: scalarNumber, number: conv.VersionToNumber(v1, v2, v3)}
 		}
 	case 26:
 		{
