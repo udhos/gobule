@@ -4,7 +4,7 @@
 
 # gobule
 
-Golang Go parser for the Bule Language
+Golang Go parser for the [Bule Language](https://github.com/johnowl/owl-rules).
 
 ## Usage
 

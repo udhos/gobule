@@ -33,16 +33,6 @@ func (s scalar) GreaterThan(ss scalar) bool {
 	return false
 }
 
-func (s scalar) GreaterThanOrEqual(ss scalar) bool {
-	if s.scalarType == scalarText && ss.scalarType == scalarText {
-		return s.text >= ss.text
-	}
-	if s.scalarType == scalarNumber && ss.scalarType == scalarNumber {
-		return s.number >= ss.number
-	}
-	return false
-}
-
 func (s scalar) Equals(ss scalar) bool {
 	if s.scalarType == scalarText && ss.scalarType == scalarText {
 		return s.text == ss.text
