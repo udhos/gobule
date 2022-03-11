@@ -24,6 +24,8 @@ type parserTest struct {
 var testTable = []parserTest{
 	{"empty", "", "{}", expectError},
 	{"true", "true", "{}", expectTrue},
+	{"true with nil vars", "true", "", expectTrue},
+	{"var with nil vars", "Number(version) >= 12", "", expectError},
 	{"false", "false", "{}", expectFalse},
 	{"NOT true", "NOT true", "{}", expectFalse},
 	{"NOT false", "NOT false", "{}", expectTrue},
@@ -106,10 +108,12 @@ func TestParser(t *testing.T) {
 
 	for _, data := range testTable {
 
-		vars := map[string]interface{}{}
+		var vars map[string]interface{}
 
-		if errJSON := json.Unmarshal([]byte(data.vars), &vars); errJSON != nil {
-			t.Errorf("%s: json: %v: vars=%s", data.name, errJSON, data.vars)
+		if data.vars != "" {
+			if errJSON := json.Unmarshal([]byte(data.vars), &vars); errJSON != nil {
+				t.Errorf("%s: json: %v: vars=%s", data.name, errJSON, data.vars)
+			}
 		}
 
 		debug := false
