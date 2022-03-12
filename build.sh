@@ -23,9 +23,10 @@ build() {
 	go install -v "$pkg"
 }
 
+build ./conv
+
 build ./bulexer
 build ./bulexer-run
-build ./conv
 
 #
 # Generate parser
@@ -37,4 +38,3 @@ go generate -v -x ./parser ;# see ./parser/generate.go
 
 build ./parser
 build ./parser-run
-build ./conv
