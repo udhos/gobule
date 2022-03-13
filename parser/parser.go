@@ -620,7 +620,7 @@ yynewstate:
 					}
 
 				} else {
-					yylex.Error(fmt.Sprintf("List(%s): unexpected list type: %v", v, varValue))
+					yylex.Error(fmt.Sprintf("List(%s): unexpected list type (%T): %v", v, varValue, varValue))
 				}
 
 			} else {

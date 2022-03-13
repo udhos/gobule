@@ -170,11 +170,11 @@ list_exp:
                             list = append(list, scalar{scalarType: scalarText, text: val})
                         default:
                             yylex.Error(fmt.Sprintf("List(%s): invalid type for element %d: %v", v, i, elem))
+                        }
                     }
-                }
 
                 } else {
-                    yylex.Error(fmt.Sprintf("List(%s): unexpected list type: %v", v, varValue))
+                    yylex.Error(fmt.Sprintf("List(%s): unexpected list type (%T): %v", v, varValue, varValue))
                 }
 
             } else {
