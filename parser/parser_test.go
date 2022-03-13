@@ -92,6 +92,11 @@ var testTable = []parserTest{
 	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
 	{"list function 3", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectTrue},
 	{"list function 4", "List(var0) CONTAINS var1", `{"var0":["alpha","beta",1,2],"var1":"beta"}`, expectTrue},
+	{"list literal not", "[1 2 3 4] NOT CONTAINS Number(var1)", `{"var1":1}`, expectFalse},
+	{"list function 1 not", "List('[1 2 3 4]') NOT CONTAINS Number(var1)", `{"var1":1}`, expectFalse},
+	{"list function 2 not", "List(var0) NOT CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectFalse},
+	{"list function 3 not", "List(var0) NOT CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectFalse},
+	{"list function 4 not", "List(var0) NOT CONTAINS var1", `{"var0":["alpha","beta",1,2],"var1":"beta"}`, expectFalse},
 	{"version 1", "Number('000100010128') = Version(1.1.128)", `{}`, expectTrue},
 	{"version 2", "Number('000100010129') > Version(1.1.128)", `{}`, expectTrue},
 	{"version 3", "Number('000100010127') < Version(1.1.128)", `{}`, expectTrue},
@@ -119,6 +124,8 @@ func TestParser(t *testing.T) {
 		debug := false
 
 		result := Run(bytes.NewBufferString(data.input), vars, debug)
+
+		t.Logf("%s: rule='%s' vars='%s' vars_map='%v' result=%v", data.name, data.input, data.vars, vars, result)
 
 		if data.expectedResult == expectError {
 			// error expected
