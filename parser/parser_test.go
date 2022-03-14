@@ -92,7 +92,7 @@ var testTable = []parserTest{
 	{"list literal 3", "['one' 'two' 'three'] CONTAINS 'two'", `{}`, expectTrue},
 	{"list literal 4", "['one' 'two' 'three'] CONTAINS 'four'", `{}`, expectFalse},
 	{"list literal 5", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
-	{"list literal 5", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":5}`, expectFalse},
+	{"list literal 6", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":5}`, expectFalse},
 	{"list function 1", "List('[1 2 3 4]') CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
 	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
 	{"list function 3", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectTrue},
