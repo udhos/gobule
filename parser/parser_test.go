@@ -87,7 +87,12 @@ var testTable = []parserTest{
 	{"currenttime 1", "CurrentTime() > 0", `{}`, expectTrue},
 	{"currenttime 2", "CurrentTime() < 250000", `{}`, expectTrue},
 	{"currenttime 3", "CurrentTime() < 0", `{}`, expectFalse},
-	{"list literal", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
+	{"list literal 1", "[1 2 3 4] CONTAINS Number('2')", `{}`, expectTrue},
+	{"list literal 2", "[1 2 3 4] CONTAINS Number('5')", `{}`, expectFalse},
+	{"list literal 3", "['one' 'two' 'three'] CONTAINS 'two'", `{}`, expectTrue},
+	{"list literal 4", "['one' 'two' 'three'] CONTAINS 'four'", `{}`, expectFalse},
+	{"list literal 5", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
+	{"list literal 5", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":5}`, expectFalse},
 	{"list function 1", "List('[1 2 3 4]') CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
 	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
 	{"list function 3", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectTrue},
@@ -153,5 +158,26 @@ func TestParser(t *testing.T) {
 			t.Errorf("%s: input=[%s] expected=%v got=%v\n",
 				data.name, data.input, expectedEval, result.Eval)
 		}
+	}
+}
+
+func TestVarsList(t *testing.T) {
+
+	input := "List(userRoles) CONTAINS 'role2'"
+
+	vars := map[string]interface{}{
+		"userRoles": []string{"role1", "role2", "role3"},
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if result.IsError() {
+		t.Errorf("unexpected error: %v", result)
+	}
+
+	if !result.Eval {
+		t.Errorf("unexpected false evaluation")
 	}
 }

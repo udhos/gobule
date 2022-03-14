@@ -5,6 +5,15 @@ import (
 	"strings"
 )
 
+// InterfaceList converts []string to []interface{}.
+func InterfaceList(strList []string) []interface{} {
+	list := make([]interface{}, 0, len(strList))
+	for _, s := range strList {
+		list = append(list, s)
+	}
+	return list
+}
+
 // VersionToNumber converts version numbers to number.
 // 1,2,3 => 100020003
 func VersionToNumber(v1, v2, v3 int64) int64 {

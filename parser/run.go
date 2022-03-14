@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/udhos/gobule/bulexer"
+	"github.com/udhos/gobule/conv"
 )
 
 // Result returns parser result.
@@ -23,6 +24,17 @@ func (r Result) IsError() bool {
 
 // Run executes parser for input.
 func Run(input io.Reader, vars map[string]interface{}, debug bool) Result {
+
+	// safeVars is a copy of vars, but with []string replaced by []interface{}
+	safeVars := map[string]interface{}{}
+	for k, v := range vars {
+		if vv, isStr := v.([]string); isStr {
+			safeVars[k] = conv.InterfaceList(vv)
+		} else {
+			safeVars[k] = v
+		}
+	}
+	vars = safeVars
 
 	lex := &Lex{lex: bulexer.New(input), debug: debug, vars: vars}
 
