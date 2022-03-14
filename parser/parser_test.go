@@ -161,12 +161,59 @@ func TestParser(t *testing.T) {
 	}
 }
 
-func TestVarsList(t *testing.T) {
+func TestVarsListStringOnly(t *testing.T) {
 
 	input := "List(userRoles) CONTAINS 'role2'"
 
 	vars := map[string]interface{}{
 		"userRoles": []string{"role1", "role2", "role3"},
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if result.IsError() {
+		t.Errorf("unexpected error: %v", result)
+	}
+
+	if !result.Eval {
+		t.Errorf("unexpected false evaluation")
+	}
+}
+
+func TestVarsListNumberOnly(t *testing.T) {
+
+	input := "List(userRoles) CONTAINS 2"
+
+	vars := map[string]interface{}{
+		"userRoles": []int{1, 2, 3},
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if result.IsError() {
+		t.Errorf("unexpected error: %v", result)
+	}
+
+	if !result.Eval {
+		t.Errorf("unexpected false evaluation")
+	}
+}
+
+func TestVarsListMixed(t *testing.T) {
+
+	input := "List(userRoles) CONTAINS 2"
+
+	var list []interface{}
+	list = append(list, "1")
+	list = append(list, 2)
+	list = append(list, "3")
+
+	vars := map[string]interface{}{
+		"userRoles": list,
 	}
 
 	const debug = false

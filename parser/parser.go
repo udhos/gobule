@@ -604,8 +604,8 @@ yynewstate:
 			if varValue, found := l.vars[v]; found {
 				// found variable
 
-				if vv, ok := varValue.([]interface{}); ok {
-
+				switch vv := varValue.(type) {
+				case []interface{}:
 					for i, elem := range vv {
 						switch val := elem.(type) {
 						case float64:
@@ -618,8 +618,15 @@ yynewstate:
 							yylex.Error(fmt.Sprintf("List(%s): invalid type for element %d: %v", v, i, elem))
 						}
 					}
-
-				} else {
+				case []int:
+					for _, elem := range vv {
+						list = append(list, scalar{scalarType: scalarNumber, number: int64(elem)})
+					}
+				case []string:
+					for _, elem := range vv {
+						list = append(list, scalar{scalarType: scalarText, text: elem})
+					}
+				default:
 					yylex.Error(fmt.Sprintf("List(%s): unexpected list type (%T): %v", v, varValue, varValue))
 				}
 

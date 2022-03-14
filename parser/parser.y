@@ -158,23 +158,30 @@ list_exp:
             if varValue, found := l.vars[v]; found {
                 // found variable
 
-                if vv, ok := varValue.([]interface{}); ok {
-
-                    for i, elem := range vv {
-                        switch val := elem.(type) {
-                        case float64:
-                            list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
-                        case int:
-                            list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
-                        case string:
-                            list = append(list, scalar{scalarType: scalarText, text: val})
-                        default:
-                            yylex.Error(fmt.Sprintf("List(%s): invalid type for element %d: %v", v, i, elem))
+                switch vv := varValue.(type) {
+                    case []interface{}:
+                        for i, elem := range vv {
+                            switch val := elem.(type) {
+                            case float64:
+                                list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
+                            case int:
+                                list = append(list, scalar{scalarType: scalarNumber, number: int64(val)})
+                            case string:
+                                list = append(list, scalar{scalarType: scalarText, text: val})
+                            default:
+                                yylex.Error(fmt.Sprintf("List(%s): invalid type for element %d: %v", v, i, elem))
+                            }
                         }
-                    }
-
-                } else {
-                    yylex.Error(fmt.Sprintf("List(%s): unexpected list type (%T): %v", v, varValue, varValue))
+                    case []int:
+                        for _, elem := range vv {
+                            list = append(list, scalar{scalarType: scalarNumber, number: int64(elem)})
+                        }
+                    case []string:
+                        for _, elem := range vv {
+                            list = append(list, scalar{scalarType: scalarText, text: elem})
+                        }
+                    default:
+                        yylex.Error(fmt.Sprintf("List(%s): unexpected list type (%T): %v", v, varValue, varValue))
                 }
 
             } else {

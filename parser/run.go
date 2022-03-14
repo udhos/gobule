@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/udhos/gobule/bulexer"
-	"github.com/udhos/gobule/conv"
 )
 
 // Result returns parser result.
@@ -25,7 +24,8 @@ func (r Result) IsError() bool {
 // Run executes parser for input.
 func Run(input io.Reader, vars map[string]interface{}, debug bool) Result {
 
-	lex := &Lex{lex: bulexer.New(input), debug: debug, vars: getSafeVars(vars)}
+	//lex := &Lex{lex: bulexer.New(input), debug: debug, vars: getSafeVars(vars)}
+	lex := &Lex{lex: bulexer.New(input), debug: debug, vars: vars}
 
 	status := yyParse(lex)
 
@@ -35,6 +35,7 @@ func Run(input io.Reader, vars map[string]interface{}, debug bool) Result {
 	return lex.result
 }
 
+/*
 // getSafeVars provides a copy of vars, but with []string replaced by []interface{}
 func getSafeVars(vars map[string]interface{}) map[string]interface{} {
 	var unsafeVars bool
@@ -55,6 +56,7 @@ func getSafeVars(vars map[string]interface{}) map[string]interface{} {
 
 	return vars
 }
+*/
 
 // RunString executes parser for string.
 func RunString(input string, vars map[string]interface{}, debug bool) Result {
