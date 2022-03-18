@@ -429,7 +429,7 @@
     "name": "list function 1",
     "rule": "List('[1 2 3 4]') CONTAINS Number(var1)",
     "vars": "{\"var1\":1}",
-    "expected_result": "true"
+    "expected_result": "error"
   },
   {
     "name": "list function 2",
@@ -459,7 +459,7 @@
     "name": "list function 1 not",
     "rule": "List('[1 2 3 4]') NOT CONTAINS Number(var1)",
     "vars": "{\"var1\":1}",
-    "expected_result": "false"
+    "expected_result": "error"
   },
   {
     "name": "list function 2 not",

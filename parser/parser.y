@@ -125,31 +125,6 @@ list_exp:
     |
     TkSBktL list TkSBktR { $$ = $2 }
     |
-    TkKeywordList TkParL TkText TkParR
-        {
-            var list []scalar
-            {
-                s := $3
-                strList, errParse := parseList(s)
-                if errParse != nil {
-                    yylex.Error(fmt.Sprintf("List(%s): bad list: %v", s, errParse))
-                }
-                for i, elem := range strList {
-                    switch v := elem.(type) {
-                    //case int:
-                    //    list = append(list, scalar{scalarType: scalarNumber, number: int64(v)})
-                    case int64:
-                        list = append(list, scalar{scalarType: scalarNumber, number: v})
-                    case string:
-                        list = append(list, scalar{scalarType: scalarText, text: v})
-                    default:
-                        yylex.Error(fmt.Sprintf("List(%s): invalid type for element %d: %v", s, i, elem))
-                    }
-                }
-            }
-            $$ = list
-        }
-    |
     TkKeywordList TkParL TkIdent TkParR
         {
             var list []scalar

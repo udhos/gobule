@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -94,12 +95,12 @@ var testTable = []parserTest{
 	{"list literal 4", "['one' 'two' 'three'] CONTAINS 'four'", `{}`, expectFalse},
 	{"list literal 5", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
 	{"list literal 6", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":5}`, expectFalse},
-	{"list function 1", "List('[1 2 3 4]') CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
+	{"list function 1", "List('[1 2 3 4]') CONTAINS Number(var1)", `{"var1":1}`, expectError},
 	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
 	{"list function 3", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectTrue},
 	{"list function 4", "List(var0) CONTAINS var1", `{"var0":["alpha","beta",1,2],"var1":"beta"}`, expectTrue},
 	{"list literal not", "[1 2 3 4] NOT CONTAINS Number(var1)", `{"var1":1}`, expectFalse},
-	{"list function 1 not", "List('[1 2 3 4]') NOT CONTAINS Number(var1)", `{"var1":1}`, expectFalse},
+	{"list function 1 not", "List('[1 2 3 4]') NOT CONTAINS Number(var1)", `{"var1":1}`, expectError},
 	{"list function 2 not", "List(var0) NOT CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectFalse},
 	{"list function 3 not", "List(var0) NOT CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectFalse},
 	{"list function 4 not", "List(var0) NOT CONTAINS var1", `{"var0":["alpha","beta",1,2],"var1":"beta"}`, expectFalse},
@@ -136,8 +137,10 @@ type parserTestCase struct {
 	ExpectedResult string `json:"expected_result"`
 }
 
-/*
 func TestSave(t *testing.T) {
+	if os.Getenv("TEST_SAVE") == "" {
+		return
+	}
 	var table []parserTestCase
 	for _, data := range testTable {
 		tt := parserTestCase{
@@ -158,7 +161,6 @@ func TestSave(t *testing.T) {
 	buf, _ := json.Marshal(table)
 	ioutil.WriteFile("tests2.json", buf, 0777)
 }
-*/
 
 func TestParserFromFile(t *testing.T) {
 
@@ -206,7 +208,7 @@ func TestParserFromFile(t *testing.T) {
 
 func scanTable(t *testing.T, table []parserTest, label string) {
 
-	for i, data := range table {
+	for _, data := range table {
 
 		var vars map[string]interface{}
 
@@ -220,7 +222,7 @@ func scanTable(t *testing.T, table []parserTest, label string) {
 
 		result := Run(bytes.NewBufferString(data.input), vars, debug)
 
-		t.Logf("%s %d/%d %s: rule='%s' vars='%s' vars_map='%v' result=%v", label, i, len(table), data.name, data.input, data.vars, vars, result)
+		//t.Logf("%s %d/%d %s: rule='%s' vars='%s' vars_map='%v' result=%v", label, i, len(table), data.name, data.input, data.vars, vars, result)
 
 		if data.expectedResult == expectError {
 			// error expected
