@@ -518,11 +518,11 @@ yynewstate:
 		}
 	case 10:
 		{
-			yyVAL.typeBool = yyS[yypt-2].typeScalar.Equals(yyS[yypt-0].typeScalar)
+			yyVAL.typeBool = yyS[yypt-2].typeScalar.equals(yyS[yypt-0].typeScalar)
 		}
 	case 11:
 		{
-			yyVAL.typeBool = !yyS[yypt-2].typeScalar.Equals(yyS[yypt-0].typeScalar)
+			yyVAL.typeBool = !yyS[yypt-2].typeScalar.equals(yyS[yypt-0].typeScalar)
 		}
 	case 12:
 		{
@@ -530,7 +530,7 @@ yynewstate:
 			if yyS[yypt-2].typeScalar.scalarType != yyS[yypt-0].typeScalar.scalarType {
 				yylex.Error("greater-than operator for different types")
 			} else {
-				eval = yyS[yypt-2].typeScalar.GreaterThan(yyS[yypt-0].typeScalar)
+				eval = yyS[yypt-2].typeScalar.greaterThan(yyS[yypt-0].typeScalar)
 			}
 			yyVAL.typeBool = eval
 		}
@@ -540,7 +540,7 @@ yynewstate:
 			if yyS[yypt-2].typeScalar.scalarType != yyS[yypt-0].typeScalar.scalarType {
 				yylex.Error("greater-than-or-equal operator for different types")
 			} else {
-				eval = !yyS[yypt-0].typeScalar.GreaterThan(yyS[yypt-2].typeScalar)
+				eval = !yyS[yypt-0].typeScalar.greaterThan(yyS[yypt-2].typeScalar)
 			}
 			yyVAL.typeBool = eval
 		}
@@ -550,7 +550,7 @@ yynewstate:
 			if yyS[yypt-2].typeScalar.scalarType != yyS[yypt-0].typeScalar.scalarType {
 				yylex.Error("less-than operator for different types")
 			} else {
-				eval = yyS[yypt-0].typeScalar.GreaterThan(yyS[yypt-2].typeScalar)
+				eval = yyS[yypt-0].typeScalar.greaterThan(yyS[yypt-2].typeScalar)
 			}
 			yyVAL.typeBool = eval
 		}
@@ -560,7 +560,7 @@ yynewstate:
 			if yyS[yypt-2].typeScalar.scalarType != yyS[yypt-0].typeScalar.scalarType {
 				yylex.Error("less-than-or-equal operator for different types")
 			} else {
-				eval = !yyS[yypt-2].typeScalar.GreaterThan(yyS[yypt-0].typeScalar)
+				eval = !yyS[yypt-2].typeScalar.greaterThan(yyS[yypt-0].typeScalar)
 			}
 			yyVAL.typeBool = eval
 		}

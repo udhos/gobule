@@ -23,7 +23,7 @@ type scalar struct {
 	number     int64
 }
 
-func (s scalar) GreaterThan(ss scalar) bool {
+func (s scalar) greaterThan(ss scalar) bool {
 	if s.scalarType == scalarText && ss.scalarType == scalarText {
 		return s.text > ss.text
 	}
@@ -33,7 +33,7 @@ func (s scalar) GreaterThan(ss scalar) bool {
 	return false
 }
 
-func (s scalar) Equals(ss scalar) bool {
+func (s scalar) equals(ss scalar) bool {
 	if s.scalarType == scalarText && ss.scalarType == scalarText {
 		return s.text == ss.text
 	}
@@ -45,7 +45,7 @@ func (s scalar) Equals(ss scalar) bool {
 
 func contains(list []scalar, wanted scalar) bool {
 	for _, v := range list {
-		if wanted.Equals(v) {
+		if wanted.equals(v) {
 			return true
 		}
 	}
