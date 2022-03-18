@@ -321,13 +321,13 @@
     "name": "number 1",
     "rule": "Number('11') >= 12",
     "vars": "{}",
-    "expected_result": "false"
+    "expected_result": "error"
   },
   {
     "name": "number 2",
     "rule": "Number('12') >= 12",
     "vars": "{}",
-    "expected_result": "true"
+    "expected_result": "error"
   },
   {
     "name": "number 3",
@@ -393,13 +393,13 @@
     "name": "list literal 1",
     "rule": "[1 2 3 4] CONTAINS Number('2')",
     "vars": "{}",
-    "expected_result": "true"
+    "expected_result": "error"
   },
   {
     "name": "list literal 2",
     "rule": "[1 2 3 4] CONTAINS Number('5')",
     "vars": "{}",
-    "expected_result": "false"
+    "expected_result": "error"
   },
   {
     "name": "list literal 3",
@@ -493,55 +493,79 @@
   },
   {
     "name": "list with numeric variable true",
-    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('1')",
+    "rule": "[10 20 Number(var1)] CONTAINS 1",
     "vars": "{\"var1\":1}",
     "expected_result": "true"
   },
   {
     "name": "list with numeric variable false",
-    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('2')",
+    "rule": "[10 20 Number(var1)] CONTAINS 2",
     "vars": "{\"var1\":1}",
     "expected_result": "false"
   },
   {
     "name": "list with string variable true",
-    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('1')",
+    "rule": "[10 20 Number(var1)] CONTAINS 1",
     "vars": "{\"var1\":\"1\"}",
     "expected_result": "true"
   },
   {
     "name": "list with string variable false",
-    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('2')",
+    "rule": "[10 20 Number(var1)] CONTAINS 2",
     "vars": "{\"var1\":\"1\"}",
     "expected_result": "false"
   },
   {
+    "name": "list with numeric variable error 1",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('1')",
+    "vars": "{\"var1\":1}",
+    "expected_result": "error"
+  },
+  {
+    "name": "list with numeric variable error 2",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('2')",
+    "vars": "{\"var1\":1}",
+    "expected_result": "error"
+  },
+  {
+    "name": "list with string variable error 1",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('1')",
+    "vars": "{\"var1\":\"1\"}",
+    "expected_result": "error"
+  },
+  {
+    "name": "list with string variable error 2",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('2')",
+    "vars": "{\"var1\":\"1\"}",
+    "expected_result": "error"
+  },
+  {
     "name": "version 1",
-    "rule": "Number('000100010128') = Version(1.1.128)",
+    "rule": "000100010128 = Version(1.1.128)",
     "vars": "{}",
     "expected_result": "true"
   },
   {
     "name": "version 2",
-    "rule": "Number('000100010129') > Version(1.1.128)",
+    "rule": "000100010129 > Version(1.1.128)",
     "vars": "{}",
     "expected_result": "true"
   },
   {
     "name": "version 3",
-    "rule": "Number('000100010127') < Version(1.1.128)",
+    "rule": "000100010127 < Version(1.1.128)",
     "vars": "{}",
     "expected_result": "true"
   },
   {
     "name": "version 4",
-    "rule": "Number('000100020000') > Version(1.1.128)",
+    "rule": "000100020000 > Version(1.1.128)",
     "vars": "{}",
     "expected_result": "true"
   },
   {
     "name": "version 5",
-    "rule": "Number('000100000999') < Version(1.1.128)",
+    "rule": "000100000999 < Version(1.1.128)",
     "vars": "{}",
     "expected_result": "true"
   },

@@ -261,15 +261,6 @@ scalar_exp:
 
             $$ = scalar{scalarType: scalarNumber, number: conv.VersionToNumber(v1, v2, v3) }
         }
-    | TkKeywordNumber TkParL TkText TkParR
-        {
-            s := $3
-            n, errConv := parseInt(s)
-            if errConv != nil {
-                yylex.Error(fmt.Sprintf("bad Number(text) conversion: '%s': %v", s, errConv))
-            }
-            $$ = scalar{scalarType: scalarNumber, number: n}
-        }
     | TkKeywordNumber TkParL TkIdent TkParR
         {
             v := $3
