@@ -77,15 +77,15 @@ bool_exp:
     | TkKeywordFalse { $$ = false }
     | list_exp TkKeywordContains scalar_exp { $$ = contains($1, $3) }
     | list_exp TkKeywordNot TkKeywordContains scalar_exp { $$ = !contains($1, $4) }
-    | scalar_exp TkEQ scalar_exp { $$ = $1.Equals($3) }
-    | scalar_exp TkNE scalar_exp { $$ = !$1.Equals($3) }
+    | scalar_exp TkEQ scalar_exp { $$ = $1.equals($3) }
+    | scalar_exp TkNE scalar_exp { $$ = !$1.equals($3) }
     | scalar_exp TkGT scalar_exp
         {
             var eval bool
             if $1.scalarType != $3.scalarType {
                 yylex.Error("greater-than operator for different types")
             } else {
-                eval = $1.GreaterThan($3)
+                eval = $1.greaterThan($3)
             }
             $$ = eval
         }
@@ -95,7 +95,7 @@ bool_exp:
             if $1.scalarType != $3.scalarType {
                 yylex.Error("greater-than-or-equal operator for different types")
             } else {
-                eval = !$3.GreaterThan($1)
+                eval = !$3.greaterThan($1)
             }
             $$ = eval
         }
@@ -105,7 +105,7 @@ bool_exp:
             if $1.scalarType != $3.scalarType {
                 yylex.Error("less-than operator for different types")
             } else {
-                eval = $3.GreaterThan($1)
+                eval = $3.greaterThan($1)
             }
             $$ = eval
         }
@@ -115,7 +115,7 @@ bool_exp:
             if $1.scalarType != $3.scalarType {
                 yylex.Error("less-than-or-equal operator for different types")
             } else {
-                eval = !$1.GreaterThan($3)
+                eval = !$1.greaterThan($3)
             }
             $$ = eval
         }
