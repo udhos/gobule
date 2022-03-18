@@ -671,8 +671,12 @@ yynewstate:
 					value.text = val
 				case int:
 					value.text = strconv.Itoa(val)
+				case int64:
+					value.text = strconv.FormatInt(val, 10)
+				case float64:
+					value.text = strconv.FormatInt(int64(val), 10)
 				default:
-					yylex.Error(fmt.Sprintf("unexpected variable type: '%s'", v))
+					yylex.Error(fmt.Sprintf("unexpected type='%T' for variable='%s' value='%v'", varValue, v, varValue))
 				}
 			} else {
 				value.text = fmt.Sprintf("variable undefined:'%s'", v)

@@ -480,6 +480,42 @@
     "expected_result": "false"
   },
   {
+    "name": "list with variable true",
+    "rule": "['beta' 'alpha' 'has_reward_program' var1] CONTAINS 'blue'",
+    "vars": "{\"var1\":\"blue\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list with variable false",
+    "rule": "['beta' 'alpha' 'has_reward_program' var1] CONTAINS 'canary'",
+    "vars": "{\"var1\":\"blue\"}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list with numeric variable true",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('1')",
+    "vars": "{\"var1\":1}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list with numeric variable false",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('2')",
+    "vars": "{\"var1\":1}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list with string variable true",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('1')",
+    "vars": "{\"var1\":\"1\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list with string variable false",
+    "rule": "['beta' 'alpha' 'has_reward_program' Number(var1)] CONTAINS Number('2')",
+    "vars": "{\"var1\":\"1\"}",
+    "expected_result": "false"
+  },
+  {
     "name": "version 1",
     "rule": "Number('000100010128') = Version(1.1.128)",
     "vars": "{}",
