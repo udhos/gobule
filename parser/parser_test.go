@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -163,8 +165,30 @@ func TestSave(t *testing.T) {
 }
 
 func TestParserFromFile(t *testing.T) {
+	const testDir = "tests"
 
-	const filename = "tests.json"
+	files, errDir := os.ReadDir(testDir)
+	if errDir != nil {
+		t.Errorf("list files: %s: %v", testDir, errDir)
+		return
+	}
+
+	for _, f := range files {
+		if f.Type().IsDir() {
+			continue
+		}
+		filename := f.Name()
+		if !strings.HasSuffix(filename, ".json") {
+			continue
+		}
+		testFromFile(t, filepath.Join(testDir, filename))
+	}
+}
+
+func testFromFile(t *testing.T, filename string) {
+
+	t.Logf("test file: %s", filename)
+
 	buf, errLoad := ioutil.ReadFile(filename)
 	if errLoad != nil {
 		t.Errorf("load tests error: %s: %v", filename, errLoad)
