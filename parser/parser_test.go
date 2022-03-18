@@ -3,6 +3,7 @@ package parser
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"testing"
 )
 
@@ -115,8 +116,87 @@ var testTable = []parserTest{
 }
 
 func TestParser(t *testing.T) {
+	scanTable(t, testTable, "builtin")
+}
 
+type parserTestCase struct {
+	Name           string `json:"name"`
+	Rule           string `json:"rule"`
+	Vars           string `json:"vars"`
+	ExpectedResult string `json:"expected_result"`
+}
+
+/*
+func TestSave(t *testing.T) {
+	var table []parserTestCase
 	for _, data := range testTable {
+		tt := parserTestCase{
+			Name: data.name,
+			Rule: data.input,
+			Vars: data.vars,
+		}
+		switch data.expectedResult {
+		case expectTrue:
+			tt.ExpectedResult = "true"
+		case expectFalse:
+			tt.ExpectedResult = "false"
+		case expectError:
+			tt.ExpectedResult = "error"
+		}
+		table = append(table, tt)
+	}
+	buf, _ := json.Marshal(table)
+	ioutil.WriteFile("tests2.json", buf, 0777)
+}
+*/
+
+func TestParserFromFile(t *testing.T) {
+
+	const filename = "tests.json"
+	buf, errLoad := ioutil.ReadFile(filename)
+	if errLoad != nil {
+		t.Errorf("load tests error: %s: %v", filename, errLoad)
+		return
+	}
+
+	var tab []parserTestCase
+
+	errJson := json.Unmarshal(buf, &tab)
+	if errJson != nil {
+		t.Errorf("json error: %s: %v", filename, errJson)
+		return
+	}
+
+	t.Logf("loaded %d tests from file %s", len(tab), filename)
+
+	var table []parserTest
+
+	for _, item := range tab {
+		tt := parserTest{
+			name:  item.Name,
+			input: item.Rule,
+			vars:  item.Vars,
+		}
+
+		switch item.ExpectedResult {
+		case "true":
+			tt.expectedResult = expectTrue
+		case "false":
+			tt.expectedResult = expectFalse
+		case "error":
+			tt.expectedResult = expectError
+		default:
+			t.Errorf("%s: bad expected result from file: %s", item.Name, item.ExpectedResult)
+		}
+		table = append(table, tt)
+	}
+
+	scanTable(t, table, "fromFile")
+}
+
+func scanTable(t *testing.T, table []parserTest, label string) {
+
+	for i, data := range table {
 
 		var vars map[string]interface{}
 
@@ -130,7 +210,7 @@ func TestParser(t *testing.T) {
 
 		result := Run(bytes.NewBufferString(data.input), vars, debug)
 
-		t.Logf("%s: rule='%s' vars='%s' vars_map='%v' result=%v", data.name, data.input, data.vars, vars, result)
+		t.Logf("%s %d/%d %s: rule='%s' vars='%s' vars_map='%v' result=%v", label, i, len(table), data.name, data.input, data.vars, vars, result)
 
 		if data.expectedResult == expectError {
 			// error expected
