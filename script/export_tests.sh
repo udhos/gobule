@@ -1,2 +1,4 @@
 
-export TEST_SAVE=1 ; go test ./parser ; cat parser/tests2.json | jq > parser/tests/tests.json | unset TEST_SAVE
+tmp=tmp.json
+
+export TEST_SAVE=$tmp ; go test ./parser ; cat parser/$tmp | jq > parser/tests/tests.json ; unset TEST_SAVE

@@ -168,7 +168,8 @@ type parserTestCase struct {
 }
 
 func TestSave(t *testing.T) {
-	if os.Getenv("TEST_SAVE") == "" {
+	output := os.Getenv("TEST_SAVE")
+	if output == "" {
 		return
 	}
 	var table []parserTestCase
@@ -189,7 +190,7 @@ func TestSave(t *testing.T) {
 		table = append(table, tt)
 	}
 	buf, _ := json.Marshal(table)
-	ioutil.WriteFile("tests2.json", buf, 0777)
+	ioutil.WriteFile(output, buf, 0777)
 }
 
 func TestParserFromFile(t *testing.T) {
