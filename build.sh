@@ -18,10 +18,12 @@ build() {
 	hash golint >/dev/null && golint "$pkg"
 	hash staticcheck >/dev/null && staticcheck "$pkg"
 
-	go test -failfast "$pkg"
+	#go test -failfast "$pkg"
 
 	go install -v "$pkg"
 }
+
+go test -race -covermode=atomic -coverprofile=coverage.txt ./...
 
 build ./conv
 
