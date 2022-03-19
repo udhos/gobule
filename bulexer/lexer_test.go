@@ -2,6 +2,7 @@ package bulexer
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 	"testing"
 )
@@ -79,4 +80,37 @@ func TestScanner(t *testing.T) {
 		}
 
 	}
+}
+
+type brokenInputMock struct {
+	done bool
+}
+
+func (r *brokenInputMock) Read(p []byte) (n int, err error) {
+	if r.done {
+		return 0, errors.New("brokenInputMock ERROR")
+	}
+	r.done = true
+	p = append(p, []byte("true")...)
+	return 4, nil
+}
+
+func TestBrokenInput(t *testing.T) {
+
+	lexer := New(&brokenInputMock{})
+
+	lexer.debug = true
+
+SCANNER:
+	for {
+		token := lexer.Next()
+		switch token.Type {
+		case TkEOF:
+			t.Errorf("unexpected EOF")
+			break SCANNER
+		case TkError:
+			break SCANNER
+		}
+	}
+
 }
