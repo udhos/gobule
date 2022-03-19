@@ -3,6 +3,7 @@ package bulexer
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -126,19 +127,26 @@ func TestBrokenInput(t *testing.T) {
 }
 
 func TestBrokenBuf(t *testing.T) {
-	brokenBuf(t, "2", &brokenBufMock{}) // exercise error for WriteByte when state blank hits a digit
-	brokenBuf(t, "a", &brokenBufMock{}) // exercise error for WriteByte when state blank hits a letter
-	//brokenBuf(t, "i2", &brokenBufMock{}) // exercise error for WriteByte when state ident hits a digit
-	//brokenBuf(t, "ii", &brokenBufMock{}) // exercise error for WriteByte when state ident hits a letter
-	//brokenBuf(t, "i+", &brokenBufMock{}) // exercise error for WriteByte when state ident hits default
-	//brokenBuf(t, "22", &brokenBufMock{}) // exercise error for WriteByte when state number hits a digit
-	brokenBuf(t, "2+", &brokenBufMock{}) // exercise error for WriteByte when state number hits default
+	brokenBuf(t, "2", &brokenBufMock{})              // exercise error for WriteByte when state blank hits a digit
+	brokenBuf(t, "a", &brokenBufMock{})              // exercise error for WriteByte when state blank hits a letter
+	brokenBuf(t, "i2", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state ident hits a digit
+	brokenBuf(t, "ii", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state ident hits a letter
+	//brokenBuf(t, "i+", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state ident hits default
+	brokenBuf(t, "22", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state number hits a digit
+	//brokenBuf(t, "2+", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state number hits default
 }
 
-type brokenBufMock struct{}
+type brokenBufMock struct {
+	maxWrites int
+	writes    int
+}
 
 func (buf *brokenBufMock) WriteByte(b byte) error {
-	return errors.New("brokenBufMock.WriteByte: will ERROR every time")
+	buf.writes++
+	if buf.writes > buf.maxWrites {
+		return fmt.Errorf("brokenBufMock.WriteByte: writes=%d > maxWrites=%d", buf.writes, buf.maxWrites)
+	}
+	return nil
 }
 func (buf *brokenBufMock) Reset()         {}
 func (buf *brokenBufMock) String() string { return "brokenBufMock.String(): dummy" }
@@ -146,9 +154,11 @@ func (buf *brokenBufMock) String() string { return "brokenBufMock.String(): dumm
 func brokenBuf(t *testing.T, input string, buf lexBuf) {
 	lexer := New(bytes.NewBufferString(input))
 	lexer.buf = buf
+	lexer.debug = true
 SCANNER:
 	for {
 		token := lexer.Next()
+		t.Logf("token: %v", token)
 		switch token.Type {
 		case TkEOF:
 			t.Errorf("unexpected EOF")
