@@ -54,6 +54,7 @@ var testTable = []lexerTest{
 	{"can concat some symbols", "true'text'123(var'text2'false", "KW-TRUE(true) TEXT(text) NUMBER(123) LPAR(() IDENT(var) TEXT(text2) KW-FALSE(false) EOF()"},
 	{"version number", "Version(1.2.3)", "KW-VERSION(Version) LPAR(() NUMBER(1) DOT(.) NUMBER(2) DOT(.) NUMBER(3) RPAR()) EOF()"},
 	{"test internal case number-dot-EOF", "2.", "NUMBER(2) ERROR(EOF-after-version-dot)"},
+	{"test internal case EOF within text", "'a", "ERROR(EOF-after-unterminated-text)"},
 }
 
 func TestScanner(t *testing.T) {
@@ -124,16 +125,18 @@ func TestBrokenInput(t *testing.T) {
 	brokenInput(t, &brokenInputMock{buf: []byte(">")})
 	brokenInput(t, &brokenInputMock{buf: []byte("2")})
 	brokenInput(t, &brokenInputMock{buf: []byte("2+")})
+	brokenInput(t, &brokenInputMock{buf: []byte("2.")})
+	brokenInput(t, &brokenInputMock{buf: []byte("2.x")})
+	brokenInput(t, &brokenInputMock{buf: []byte("'a")})
 }
 
 func TestBrokenBuf(t *testing.T) {
-	brokenBuf(t, "2", &brokenBufMock{})              // exercise error for WriteByte when state blank hits a digit
-	brokenBuf(t, "a", &brokenBufMock{})              // exercise error for WriteByte when state blank hits a letter
-	brokenBuf(t, "i2", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state ident hits a digit
-	brokenBuf(t, "ii", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state ident hits a letter
-	//brokenBuf(t, "i+", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state ident hits default
-	brokenBuf(t, "22", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state number hits a digit
-	//brokenBuf(t, "2+", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state number hits default
+	brokenBuf(t, "2", &brokenBufMock{})               // exercise error for WriteByte when state blank hits a digit
+	brokenBuf(t, "a", &brokenBufMock{})               // exercise error for WriteByte when state blank hits a letter
+	brokenBuf(t, "i2", &brokenBufMock{maxWrites: 1})  // exercise error for WriteByte when state ident hits a digit
+	brokenBuf(t, "ii", &brokenBufMock{maxWrites: 1})  // exercise error for WriteByte when state ident hits a letter
+	brokenBuf(t, "22", &brokenBufMock{maxWrites: 1})  // exercise error for WriteByte when state number hits a digit
+	brokenBuf(t, "'ab", &brokenBufMock{maxWrites: 1}) // exercise error for WriteByte when state text hits default
 }
 
 type brokenBufMock struct {
