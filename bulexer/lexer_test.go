@@ -83,6 +83,7 @@ func TestScanner(t *testing.T) {
 }
 
 type brokenInputMock struct {
+	buf  []byte
 	done bool
 }
 
@@ -91,16 +92,13 @@ func (r *brokenInputMock) Read(p []byte) (n int, err error) {
 		return 0, errors.New("brokenInputMock ERROR")
 	}
 	r.done = true
-	p = append(p, []byte("true")...)
-	return 4, nil
+	p = append(p, r.buf...)
+	return len(r.buf), nil
 }
 
-func TestBrokenInput(t *testing.T) {
-
-	lexer := New(&brokenInputMock{})
-
+func brokenInput(t *testing.T, r *brokenInputMock) {
+	lexer := New(r)
 	lexer.debug = true
-
 SCANNER:
 	for {
 		token := lexer.Next()
@@ -112,5 +110,11 @@ SCANNER:
 			break SCANNER
 		}
 	}
+}
 
+func TestBrokenInput(t *testing.T) {
+	brokenInput(t, &brokenInputMock{buf: []byte("true")})
+	brokenInput(t, &brokenInputMock{buf: []byte("tr")})
+	brokenInput(t, &brokenInputMock{buf: []byte("true"), done: true})
+	brokenInput(t, &brokenInputMock{buf: []byte{}, done: true})
 }
