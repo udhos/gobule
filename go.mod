@@ -1,3 +1,6 @@
 module github.com/udhos/gobule
 
-go 1.16
+// a "go" directive 1.N means that the code in that module is permitted to use
+// language features that existed in 1.N even if those features were removed
+// in later releases of the language.
+go 1.18
