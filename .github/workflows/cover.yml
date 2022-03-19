@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '^1.18' # The Go version to download (if necessary) and use.
+          fetch-depth: 2 # codecov: fetch-depth > 1 or set to 0
       - run: go version
       - name: Run tests and coverage
         run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
