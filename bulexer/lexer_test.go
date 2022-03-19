@@ -121,17 +121,16 @@ func TestBrokenInput(t *testing.T) {
 	brokenInput(t, &brokenInputMock{buf: []byte("tr"), pos: len("tr")})
 	brokenInput(t, &brokenInputMock{buf: []byte("<")})
 	brokenInput(t, &brokenInputMock{buf: []byte(">")})
-	brokenInput(t, &brokenInputMock{buf: []byte("i2")})
-	brokenInput(t, &brokenInputMock{buf: []byte("ii")})
-	brokenInput(t, &brokenInputMock{buf: []byte("i+")})
-	brokenInput(t, &brokenInputMock{buf: []byte("2")})
-	brokenInput(t, &brokenInputMock{buf: []byte("22")})
-	brokenInput(t, &brokenInputMock{buf: []byte("2+")})
 }
 
 func TestBrokenBuf(t *testing.T) {
-	brokenBuf(t, "1", &brokenBufMock{}) // exercise error for WriteByte when state blank hits a digit
-	brokenBuf(t, "a", &brokenBufMock{}) // exercise error for WriteByte when state blank hits a letter
+	brokenBuf(t, "2", &brokenBufMock{})  // exercise error for WriteByte when state blank hits a digit
+	brokenBuf(t, "a", &brokenBufMock{})  // exercise error for WriteByte when state blank hits a letter
+	brokenBuf(t, "i2", &brokenBufMock{}) // exercise error for WriteByte when state ident hits a digit
+	brokenBuf(t, "ii", &brokenBufMock{}) // exercise error for WriteByte when state ident hits a letter
+	brokenBuf(t, "i+", &brokenBufMock{}) // exercise error for WriteByte when state ident hits default
+	brokenBuf(t, "22", &brokenBufMock{}) // exercise error for WriteByte when state number hits a digit
+	brokenBuf(t, "2+", &brokenBufMock{}) // exercise error for WriteByte when state number hits default
 }
 
 type brokenBufMock struct{}
