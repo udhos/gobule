@@ -122,6 +122,7 @@ func TestBrokenInput(t *testing.T) {
 
 func TestBrokenBuf(t *testing.T) {
 	brokenBuf(t, "1", &brokenBufMock{}) // exercise error for WriteByte when state blank hits a digit
+	brokenBuf(t, "a", &brokenBufMock{}) // exercise error for WriteByte when state blank hits a letter
 }
 
 type brokenBufMock struct{}
