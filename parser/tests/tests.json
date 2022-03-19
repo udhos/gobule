@@ -30,8 +30,26 @@
     "expected_result": "false"
   },
   {
+    "name": "false deeply enclosed",
+    "rule": "(((((false)))))",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "unbalanced parenthesis",
+    "rule": "(((((true))))",
+    "vars": "{}",
+    "expected_result": "error"
+  },
+  {
     "name": "NOT true",
     "rule": "NOT true",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "NOT(true)",
+    "rule": "NOT(true)",
     "vars": "{}",
     "expected_result": "false"
   },
@@ -42,14 +60,32 @@
     "expected_result": "true"
   },
   {
+    "name": "NOT(false)",
+    "rule": "NOT(false)",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
     "name": "NOT NOT true",
     "rule": "NOT NOT true",
     "vars": "{}",
     "expected_result": "true"
   },
   {
+    "name": "NOT(NOT true)",
+    "rule": "NOT(NOT true)",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
     "name": "NOT NOT false",
     "rule": "NOT NOT false",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "NOT(NOT false)",
+    "rule": "NOT(NOT false)",
     "vars": "{}",
     "expected_result": "false"
   },
@@ -300,6 +336,48 @@
     "expected_result": "true"
   },
   {
+    "name": "simple or 4",
+    "rule": "1 > 2 OR 1 = 1",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "simple or 5",
+    "rule": "1 > 2 OR 1 < 1",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "simple or 6",
+    "rule": "1 < 2 OR 1 = 1",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "simple or 7",
+    "rule": "true OR false",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "simple or 8",
+    "rule": "false OR false",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "simple or 9",
+    "rule": "(true) OR (false)",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "simple or 10",
+    "rule": "(false) OR (false)",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
     "name": "simple and 1",
     "rule": "(1 > 2) AND (1 = 1)",
     "vars": "{}",
@@ -316,6 +394,48 @@
     "rule": "(1 < 2) AND (1 = 1)",
     "vars": "{}",
     "expected_result": "true"
+  },
+  {
+    "name": "simple and 4",
+    "rule": "1 > 2 AND 1 = 1",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "simple and 5",
+    "rule": "1 > 2 AND 1 < 1",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "simple and 6",
+    "rule": "1 < 2 AND 1 = 1",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "simple and 7",
+    "rule": "true AND true",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "simple and 8",
+    "rule": "false AND true",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "simple and 9",
+    "rule": "(true) AND (true)",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "simple and 10",
+    "rule": "(false) AND (true)",
+    "vars": "{}",
+    "expected_result": "false"
   },
   {
     "name": "number 1",
