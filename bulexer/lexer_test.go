@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"strings"
 	"testing"
 )
@@ -170,4 +171,56 @@ SCANNER:
 			break SCANNER
 		}
 	}
+}
+
+func TestBadState(t *testing.T) {
+	lexer := New(bytes.NewBufferString(""))
+	lexer.debug = true
+	lexer.state = -1 // bad state
+SCANNER:
+	for {
+		token := lexer.Next()
+		t.Logf("token: %v", token)
+		switch token.Type {
+		case TkEOF:
+			t.Errorf("unexpected EOF")
+			break SCANNER
+		case TkError:
+			break SCANNER
+		}
+	}
+}
+
+func TestBrokenUnread(t *testing.T) {
+	brokenUnread(t, "<2")
+}
+
+func brokenUnread(t *testing.T, input string) {
+	lexer := New(bytes.NewBufferString(input))
+	lexer.reader = &brokenUnreader{reader: lexer.reader} // replace with broken unreader
+	lexer.debug = true
+SCANNER:
+	for {
+		token := lexer.Next()
+		t.Logf("token: %v", token)
+		switch token.Type {
+		case TkEOF:
+			t.Errorf("unexpected EOF")
+			break SCANNER
+		case TkError:
+			break SCANNER
+		}
+	}
+}
+
+type brokenUnreader struct {
+	reader io.ByteScanner
+}
+
+func (r *brokenUnreader) ReadByte() (byte, error) {
+	return r.reader.ReadByte()
+}
+
+func (r *brokenUnreader) UnreadByte() error {
+	return errors.New("brokenUnreader.UnreadByte(): ERROR unable to unread")
 }
