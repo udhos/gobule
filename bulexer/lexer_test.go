@@ -119,3 +119,31 @@ func TestBrokenInput(t *testing.T) {
 	brokenInput(t, &brokenInputMock{buf: []byte("true"), pos: len("true")})
 	brokenInput(t, &brokenInputMock{buf: []byte("tr"), pos: len("tr")})
 }
+
+func TestBrokenBuf(t *testing.T) {
+	brokenBuf(t, "1", &brokenBufMock{}) // exercise error for WriteByte when state blank hits a digit
+}
+
+type brokenBufMock struct{}
+
+func (buf *brokenBufMock) WriteByte(b byte) error {
+	return errors.New("brokenBufMock.WriteByte: will ERROR every time")
+}
+func (buf *brokenBufMock) Reset()         {}
+func (buf *brokenBufMock) String() string { return "brokenBufMock.String(): dummy" }
+
+func brokenBuf(t *testing.T, input string, buf lexBuf) {
+	lexer := New(bytes.NewBufferString(input))
+	lexer.buf = buf
+SCANNER:
+	for {
+		token := lexer.Next()
+		switch token.Type {
+		case TkEOF:
+			t.Errorf("unexpected EOF")
+			break SCANNER
+		case TkError:
+			break SCANNER
+		}
+	}
+}

@@ -23,8 +23,14 @@ const (
 type Lexer struct {
 	reader io.ByteScanner
 	state  lexState
-	buf    bytes.Buffer
+	buf    lexBuf // buf could be bytes.Buffer, but we use an interface for testing
 	debug  bool
+}
+
+type lexBuf interface {
+	fmt.Stringer
+	io.ByteWriter
+	Reset() // is this define anywhere?
 }
 
 // TokenType identifies the type for lexical tokens returned by scanner.
@@ -106,7 +112,7 @@ var tokenName = []string{
 
 // New creates a lexical scanner.
 func New(input io.Reader) *Lexer {
-	return &Lexer{reader: bufio.NewReader(input)}
+	return &Lexer{reader: bufio.NewReader(input), buf: &bytes.Buffer{}}
 }
 
 func isBlank(b byte) bool {
