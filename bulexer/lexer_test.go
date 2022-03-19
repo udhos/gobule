@@ -118,7 +118,7 @@ func TestBrokenInput(t *testing.T) {
 	brokenInput(t, &brokenInputMock{buf: []byte("tr")})
 	brokenInput(t, &brokenInputMock{buf: []byte("true"), pos: len("true")})
 	brokenInput(t, &brokenInputMock{buf: []byte("tr"), pos: len("tr")})
-	brokenInput(t, &brokenInputMock{buf: []byte("<"), pos: len("<")})
+	brokenInput(t, &brokenInputMock{buf: []byte("<")})
 }
 
 func TestBrokenBuf(t *testing.T) {
