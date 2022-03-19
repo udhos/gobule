@@ -193,6 +193,10 @@ SCANNER:
 
 func TestBrokenUnread(t *testing.T) {
 	brokenUnread(t, "<2")
+	brokenUnread(t, ">2")
+	brokenUnread(t, "a+")
+	brokenUnread(t, "2+")
+	brokenUnread(t, "2.2")
 }
 
 func brokenUnread(t *testing.T, input string) {
