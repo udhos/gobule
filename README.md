@@ -1,7 +1,7 @@
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/udhos/gobule/blob/main/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/udhos/gobule)](https://goreportcard.com/report/github.com/udhos/gobule)
 [![Go Reference](https://pkg.go.dev/badge/github.com/udhos/gobule.svg)](https://pkg.go.dev/github.com/udhos/gobule)
-[![GH Actions Coverage](https://github.com/udhos/gobule/actions/workflows/cover.yml/badge.svg)](https://github.com/udhos/gobule/actions/workflows/cover.yml)
+[![Actions](https://github.com/udhos/gobule/actions/workflows/cover.yml/badge.svg)](https://github.com/udhos/gobule/actions/workflows/cover.yml)
 [![codecov](https://codecov.io/gh/udhos/gobule/branch/main/graph/badge.svg?token=I20LOO4AFI)](https://codecov.io/gh/udhos/gobule)
 
 # gobule
