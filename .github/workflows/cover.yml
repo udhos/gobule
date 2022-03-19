@@ -9,6 +9,8 @@ jobs:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # codecov: fetch-depth > 1 or set to 0
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: List files in the repository
@@ -18,7 +20,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '^1.18' # The Go version to download (if necessary) and use.
-          fetch-depth: 2 # codecov: fetch-depth > 1 or set to 0
       - run: go version
       - name: Run tests and coverage
         run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
