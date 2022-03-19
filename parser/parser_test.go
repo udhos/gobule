@@ -266,6 +266,13 @@ func scanTable(t *testing.T, table []parserTest, label string) {
 
 		result := Run(bytes.NewBufferString(data.input), vars, debug)
 
+		result2 := RunString(data.input, vars, debug)
+
+		if result.IsError() != result2.IsError() || result.Eval != result2.Eval {
+			t.Errorf("%s: Run.IsError=%v <=> RunString.IsError=%v, Run.Eval=%v <=> RunString.Eval=%v",
+				data.name, result.IsError(), result2.IsError(), result.Eval, result2.Eval)
+		}
+
 		//t.Logf("%s %d/%d %s: rule='%s' vars='%s' vars_map='%v' result=%v", label, i, len(table), data.name, data.input, data.vars, vars, result)
 
 		if data.expectedResult == expectError {
@@ -362,5 +369,14 @@ func TestVarsListMixed(t *testing.T) {
 
 	if !result.Eval {
 		t.Errorf("unexpected false evaluation")
+	}
+}
+
+func TestDebug(t *testing.T) {
+	if result := RunString("true", nil, true); result.IsError() || !result.Eval {
+		t.Errorf("unexpected false result")
+	}
+	if result := RunString("v>1", nil, true); !result.IsError() {
+		t.Errorf("unexpected non-error")
 	}
 }
