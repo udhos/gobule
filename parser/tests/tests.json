@@ -718,5 +718,53 @@
     "rule": "Number(appVersion) < Version(1.1.128)",
     "vars": "{\"appVersion\":\"000100000999\"}",
     "expected_result": "true"
+  },
+  {
+    "name": "not 1",
+    "rule": "NOT NOT NOT NOT 1=1",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "not 2",
+    "rule": "NOT NOT NOT NOT 1!=1",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "not 3",
+    "rule": "NOT NOT NOT NOT (false AND true)",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "not 4",
+    "rule": "NOT NOT NOT NOT (false OR true)",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "not 5",
+    "rule": "(NOT NOT NOT NOT 1=1) AND (NOT NOT NOT NOT 1>2)",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "not 6",
+    "rule": "(NOT NOT NOT NOT 1=1) AND (NOT NOT NOT NOT 1<2)",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "not 7",
+    "rule": "NOT NOT NOT NOT 1=1 AND NOT NOT NOT NOT 1>2",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "not 8",
+    "rule": "NOT NOT NOT NOT 1=1 AND NOT NOT NOT NOT 1<2",
+    "vars": "{}",
+    "expected_result": "true"
   }
 ]

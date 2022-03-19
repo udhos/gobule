@@ -146,6 +146,14 @@ var testTable = []parserTest{
 	{"version 8", "Number(appVersion) < Version(1.1.128)", `{"appVersion":"000100010127"}`, expectTrue},
 	{"version 9", "Number(appVersion) > Version(1.1.128)", `{"appVersion":"000100020000"}`, expectTrue},
 	{"version 10", "Number(appVersion) < Version(1.1.128)", `{"appVersion":"000100000999"}`, expectTrue},
+	{"not 1", "NOT NOT NOT NOT 1=1", "{}", expectTrue},
+	{"not 2", "NOT NOT NOT NOT 1!=1", "{}", expectFalse},
+	{"not 3", "NOT NOT NOT NOT (false AND true)", "{}", expectFalse},
+	{"not 4", "NOT NOT NOT NOT (false OR true)", "{}", expectTrue},
+	{"not 5", "(NOT NOT NOT NOT 1=1) AND (NOT NOT NOT NOT 1>2)", "{}", expectFalse},
+	{"not 6", "(NOT NOT NOT NOT 1=1) AND (NOT NOT NOT NOT 1<2)", "{}", expectTrue},
+	{"not 7", "NOT NOT NOT NOT 1=1 AND NOT NOT NOT NOT 1>2", "{}", expectFalse},
+	{"not 8", "NOT NOT NOT NOT 1=1 AND NOT NOT NOT NOT 1<2", "{}", expectTrue},
 }
 
 func TestParser(t *testing.T) {
