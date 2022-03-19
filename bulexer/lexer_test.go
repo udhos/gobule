@@ -52,6 +52,7 @@ var testTable = []lexerTest{
 		"KW-NOT(NOT) LSBKT([) NUMBER(1) IDENT(b) TEXT(c) RSBKT(]) KW-NOT(NOT) KW-CONTAINS(CONTAINS) KW-NUMBER(Number) LPAR(() TEXT(3) RPAR()) EOF()"},
 	{"can concat some symbols", "true'text'123(var'text2'false", "KW-TRUE(true) TEXT(text) NUMBER(123) LPAR(() IDENT(var) TEXT(text2) KW-FALSE(false) EOF()"},
 	{"version number", "Version(1.2.3)", "KW-VERSION(Version) LPAR(() NUMBER(1) DOT(.) NUMBER(2) DOT(.) NUMBER(3) RPAR()) EOF()"},
+	{"test internal case number-dot-EOF", "2.", "NUMBER(2) ERROR(EOF-after-version-dot)"},
 }
 
 func TestScanner(t *testing.T) {
@@ -120,6 +121,12 @@ func TestBrokenInput(t *testing.T) {
 	brokenInput(t, &brokenInputMock{buf: []byte("tr"), pos: len("tr")})
 	brokenInput(t, &brokenInputMock{buf: []byte("<")})
 	brokenInput(t, &brokenInputMock{buf: []byte(">")})
+	brokenInput(t, &brokenInputMock{buf: []byte("i2")})
+	brokenInput(t, &brokenInputMock{buf: []byte("ii")})
+	brokenInput(t, &brokenInputMock{buf: []byte("i+")})
+	brokenInput(t, &brokenInputMock{buf: []byte("2")})
+	brokenInput(t, &brokenInputMock{buf: []byte("22")})
+	brokenInput(t, &brokenInputMock{buf: []byte("2+")})
 }
 
 func TestBrokenBuf(t *testing.T) {
