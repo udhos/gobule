@@ -136,7 +136,7 @@ SCANNER:
 		b, errByte := l.reader.ReadByte()
 
 		if l.debug {
-			log.Printf("state=%d: byte: %d %c err:%v", l.state, b, b, errByte)
+			log.Printf("state=%d: byte: %d '%c' err:%v", l.state, b, b, errByte)
 		}
 
 		switch l.state {
