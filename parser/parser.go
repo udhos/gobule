@@ -691,7 +691,7 @@ yynewstate:
 					value.number = n
 				case int:
 					value.number = int64(val)
-				case int64: // does it happen?
+				case int64:
 					value.number = val
 				case float64:
 					value.number = int64(val)
