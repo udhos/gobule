@@ -35,29 +35,6 @@ func Run(input io.Reader, vars map[string]interface{}, debug bool) Result {
 	return lex.result
 }
 
-/*
-// getSafeVars provides a copy of vars, but with []string replaced by []interface{}
-func getSafeVars(vars map[string]interface{}) map[string]interface{} {
-	var unsafeVars bool
-
-	safeVars := map[string]interface{}{}
-	for k, v := range vars {
-		if vv, isStr := v.([]string); isStr {
-			safeVars[k] = conv.InterfaceList(vv)
-			unsafeVars = true
-		} else {
-			safeVars[k] = v
-		}
-	}
-
-	if unsafeVars {
-		return safeVars
-	}
-
-	return vars
-}
-*/
-
 // RunString executes parser for string.
 func RunString(input string, vars map[string]interface{}, debug bool) Result {
 	return Run(bytes.NewBufferString(input), vars, debug)
