@@ -24,7 +24,6 @@ func (r Result) IsError() bool {
 // Run executes parser for input.
 func Run(input io.Reader, vars map[string]interface{}, debug bool) Result {
 
-	//lex := &Lex{lex: bulexer.New(input), debug: debug, vars: getSafeVars(vars)}
 	lex := &Lex{lex: bulexer.New(input), debug: debug, vars: vars}
 
 	status := yyParse(lex)

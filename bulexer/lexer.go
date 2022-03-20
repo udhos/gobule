@@ -30,7 +30,7 @@ type Lexer struct {
 type lexBuf interface {
 	fmt.Stringer
 	io.ByteWriter
-	Reset() // is this define anywhere?
+	Reset() // is this interface defined anywhere?
 }
 
 // TokenType identifies the type for lexical tokens returned by scanner.
