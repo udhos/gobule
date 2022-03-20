@@ -541,13 +541,12 @@ func TestBadVersion3(t *testing.T) {
 	}
 }
 
-/*
-func TestBadVarNumber(t *testing.T) {
+func TestBadVarNumberType(t *testing.T) {
 
 	input := "Number(value) = 3"
 
 	vars := map[string]interface{}{
-		"value": "3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
+		"value": true,
 	}
 
 	const debug = false
@@ -558,7 +557,24 @@ func TestBadVarNumber(t *testing.T) {
 		t.Errorf("expecting bad variable number conversion but got success: %v", result)
 	}
 }
-*/
+
+func TestVarNumberType(t *testing.T) {
+
+	input := "Number(value) = 3 AND Number(age) = 2"
+
+	vars := map[string]interface{}{
+		"value": int(3),
+		"age":   int64(4),
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if result.IsError() {
+		t.Errorf("bad variable number type: %v", result)
+	}
+}
 
 func TestDebug(t *testing.T) {
 	if result := RunString("true", nil, true); result.IsError() || !result.Eval {

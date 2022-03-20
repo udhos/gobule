@@ -691,10 +691,12 @@ yynewstate:
 					value.number = n
 				case int:
 					value.number = int64(val)
+				case int64: // does it happen?
+					value.number = val
 				case float64:
 					value.number = int64(val)
 				default:
-					yylex.Error(fmt.Sprintf("unexpected Number(variable) var type: '%s': %q", v, varValue))
+					yylex.Error(fmt.Sprintf("unexpected Number(variable) var type: var='%s': value=%v type=%T", v, varValue, varValue))
 				}
 			} else {
 				value.text = fmt.Sprintf("Number() variable undefined:'%s'", v)
