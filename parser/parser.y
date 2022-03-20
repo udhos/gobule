@@ -210,7 +210,7 @@ scalar_exp:
                     yylex.Error(fmt.Sprintf("unexpected type='%T' for variable='%s' value='%v'", varValue, v, varValue))
                 }
             } else {
-                value.text = fmt.Sprintf("variable undefined:'%s'", v)
+                value.text = fmt.Sprintf("solving IDENT: variable undefined:'%s'", v)
                 yylex.Error(value.text)
             }
             $$ = value

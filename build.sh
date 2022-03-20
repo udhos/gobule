@@ -15,8 +15,8 @@ build() {
 	go fix "$pkg"
 	go vet "$pkg"
 
-	hash golint >/dev/null && golint "$pkg"
-	hash staticcheck >/dev/null && staticcheck "$pkg"
+	hash golint 2>/dev/null && golint "$pkg"
+	hash staticcheck 2>/dev/null && staticcheck "$pkg"
 
 	#go test -failfast "$pkg"
 

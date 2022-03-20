@@ -381,6 +381,185 @@ func TestVarsListMixed(t *testing.T) {
 	}
 }
 
+func TestVarsListWrongType(t *testing.T) {
+
+	input := "List(booleans) CONTAINS [2]"
+
+	vars := map[string]interface{}{
+		"booleans": []bool{true, false, true}, // should be []interface{}
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting error for vars list but got success: %v", result)
+	}
+}
+
+func TestVarsListWrongElemType(t *testing.T) {
+
+	input := "List(userRoles) CONTAINS 2"
+
+	var list []interface{}
+	list = append(list, "1")
+	list = append(list, 2)
+	list = append(list, "3")
+	list = append(list, true) // bool type is not supported
+
+	vars := map[string]interface{}{
+		"userRoles": list,
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting error for unsupported elem type but got success: %v", result)
+	}
+}
+
+func TestVarNotFound(t *testing.T) {
+
+	input := "List(userRolesNotFound) CONTAINS 2"
+
+	var list []interface{}
+	list = append(list, "1")
+	list = append(list, 2)
+	list = append(list, "3")
+	list = append(list, true) // bool type is not supported
+
+	vars := map[string]interface{}{
+		"userRoles": list,
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting error for var not found but got success: %v", result)
+	}
+}
+
+func TestBadNumberConversion(t *testing.T) {
+
+	input := "Number(age) > 2"
+
+	vars := map[string]interface{}{
+		"age": "33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting bad number conversion but got success: %v", result)
+	}
+}
+
+func TestVarType(t *testing.T) {
+
+	input := "int = '2' AND int64 = '3'"
+
+	vars := map[string]interface{}{
+		"int":   int(7),
+		"int64": int64(7),
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if result.IsError() {
+		t.Errorf("bad var type: %v", result)
+	}
+}
+
+func TestVarTypeBool(t *testing.T) {
+
+	input := "bool = '4'"
+
+	vars := map[string]interface{}{
+		"bool": true,
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting bad var type but got success: %v", result)
+	}
+}
+
+func TestBadVersion1(t *testing.T) {
+
+	input := "Version(3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333.3.3) = 2"
+
+	vars := map[string]interface{}{}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting bad version conversion but got success: %v", result)
+	}
+}
+
+func TestBadVersion2(t *testing.T) {
+
+	input := "Version(3.3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333.3) = 2"
+
+	vars := map[string]interface{}{}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting bad version conversion but got success: %v", result)
+	}
+}
+
+func TestBadVersion3(t *testing.T) {
+
+	input := "Version(3.3.3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333) = 2"
+
+	vars := map[string]interface{}{}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting bad version conversion but got success: %v", result)
+	}
+}
+
+/*
+func TestBadVarNumber(t *testing.T) {
+
+	input := "Number(value) = 3"
+
+	vars := map[string]interface{}{
+		"value": "3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
+	}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting bad variable number conversion but got success: %v", result)
+	}
+}
+*/
+
 func TestDebug(t *testing.T) {
 	if result := RunString("true", nil, true); result.IsError() || !result.Eval {
 		t.Errorf("unexpected false result")
