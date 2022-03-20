@@ -41,10 +41,11 @@ var testTable = []parserTest{
 	{"NOT(NOT true)", "NOT(NOT true)", "{}", expectTrue},
 	{"NOT NOT false", "NOT NOT false", "{}", expectFalse},
 	{"NOT(NOT false)", "NOT(NOT false)", "{}", expectFalse},
+	{"list empty", "[] CONTAINS 4", "{}", expectFalse},
 	{"list 1", "[1 2 3 4] CONTAINS 4", "{}", expectTrue},
-	{"list 1", "[1 2 3 4] NOT CONTAINS 4", "{}", expectFalse},
-	{"list 1", "NOT [1 2 3 4] CONTAINS 4", "{}", expectFalse},
-	{"list 2", "['blue' 'yellow' 'green'] CONTAINS 'pink'", "{}", expectFalse},
+	{"list 2", "[1 2 3 4] NOT CONTAINS 4", "{}", expectFalse},
+	{"list 3", "NOT [1 2 3 4] CONTAINS 4", "{}", expectFalse},
+	{"list 4", "['blue' 'yellow' 'green'] CONTAINS 'pink'", "{}", expectFalse},
 	{"missing variable", "[name] CONTAINS 'John'", "{}", expectError},
 	{"simple var 1", "[name] CONTAINS 'John'", `{"name":"Jane"}`, expectFalse},
 	{"simple var 2", "[name] CONTAINS 'John'", `{"name":"John"}`, expectTrue},
@@ -117,6 +118,7 @@ var testTable = []parserTest{
 	{"list literal 4", "['one' 'two' 'three'] CONTAINS 'four'", `{}`, expectFalse},
 	{"list literal 5", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
 	{"list literal 6", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":5}`, expectFalse},
+	{"list function empty", "List(var0) CONTAINS 2", `{"var0":[],"var1":1}`, expectFalse},
 	{"list function 1", "List('[1 2 3 4]') CONTAINS Number(var1)", `{"var1":1}`, expectError},
 	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
 	{"list function 3", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":"1"}`, expectTrue},
@@ -573,6 +575,21 @@ func TestVarNumberType(t *testing.T) {
 
 	if result.IsError() {
 		t.Errorf("bad variable number type: %v", result)
+	}
+}
+
+func TestBadNumber(t *testing.T) {
+
+	input := "2 < 33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333"
+
+	vars := map[string]interface{}{}
+
+	const debug = false
+
+	result := Run(bytes.NewBufferString(input), vars, debug)
+
+	if !result.IsError() {
+		t.Errorf("expecting bad number conversion but got success: %v", result)
 	}
 }
 
