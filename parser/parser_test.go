@@ -138,6 +138,18 @@ var testTable = []parserTest{
 	{"list with numeric variable false", "['beta' 'alpha' 'has_reward_program' var1] CONTAINS '2'", `{"var1":1}`, expectFalse},
 	{"list with string variable true", "['beta' 'alpha' 'has_reward_program' var1] CONTAINS '1'", `{"var1":"1"}`, expectTrue},
 	{"list with string variable false", "['beta' 'alpha' 'has_reward_program' var1] CONTAINS '2'", `{"var1":"1"}`, expectFalse},
+	{"list contains variable true", "['beta' 'alpha' 'has_reward_program'] CONTAINS var1", `{"var1":"alpha"}`, expectTrue},
+	{"list contains variable false", "['beta' 'alpha' 'has_reward_program'] CONTAINS var1", `{"var1":"gamma"}`, expectFalse},
+	{"list contains variable enclosed all true", "(['beta' 'alpha' 'has_reward_program'] CONTAINS var1)", `{"var1":"alpha"}`, expectTrue},
+	{"list contains variable enclosed all false", "(['beta' 'alpha' 'has_reward_program'] CONTAINS var1)", `{"var1":"gamma"}`, expectFalse},
+	{"list contains variable enclosed list true", "(['beta' 'alpha' 'has_reward_program']) CONTAINS var1", `{"var1":"alpha"}`, expectTrue},
+	{"list contains variable enclosed list false", "(['beta' 'alpha' 'has_reward_program']) CONTAINS var1", `{"var1":"gamma"}`, expectFalse},
+	{"list contains variable enclosed var true", "['beta' 'alpha' 'has_reward_program'] CONTAINS (var1)", `{"var1":"alpha"}`, expectTrue},
+	{"list contains variable enclosed var false", "['beta' 'alpha' 'has_reward_program'] CONTAINS (var1)", `{"var1":"gamma"}`, expectFalse},
+	{"list contains variable enclosed list+all true", "((['beta' 'alpha' 'has_reward_program']) CONTAINS var1)", `{"var1":"alpha"}`, expectTrue},
+	{"list contains variable enclosed list+all false", "((['beta' 'alpha' 'has_reward_program']) CONTAINS var1)", `{"var1":"gamma"}`, expectFalse},
+	{"list contains variable enclosed list+all+var true", "((['beta' 'alpha' 'has_reward_program']) CONTAINS (var1))", `{"var1":"alpha"}`, expectTrue},
+	{"list contains variable enclosed list+all+var false", "((['beta' 'alpha' 'has_reward_program']) CONTAINS (var1))", `{"var1":"gamma"}`, expectFalse},
 	{"version 1", "000100010128 = Version(1.1.128)", `{}`, expectTrue},
 	{"version 2", "000100010129 > Version(1.1.128)", `{}`, expectTrue},
 	{"version 3", "000100010127 < Version(1.1.128)", `{}`, expectTrue},
@@ -228,9 +240,9 @@ func testFromFile(t *testing.T, filename string) {
 
 	var tab []parserTestCase
 
-	errJson := json.Unmarshal(buf, &tab)
-	if errJson != nil {
-		t.Errorf("json error: %s: %v", filename, errJson)
+	errJSON := json.Unmarshal(buf, &tab)
+	if errJSON != nil {
+		t.Errorf("json error: %s: %v", filename, errJSON)
 		return
 	}
 

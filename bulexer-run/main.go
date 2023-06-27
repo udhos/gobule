@@ -1,3 +1,4 @@
+// Package main implements bulexer-run.
 package main
 
 import (

@@ -1,3 +1,4 @@
+// Package conv implements version conversion helpers.
 package conv
 
 import (

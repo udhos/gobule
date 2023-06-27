@@ -121,6 +121,8 @@ bool_exp:
         }
 
 list_exp:
+    TkParL list_exp TkParR { $$ = $2 }
+    |
     TkSBktL TkSBktR { $$ = []scalar{} }
     |
     TkSBktL list TkSBktR { $$ = $2 }
@@ -181,6 +183,8 @@ list:
     }
 
 scalar_exp:
+    TkParL scalar_exp TkParR { $$ = $2 }
+    |
     TkText { $$ = scalar{scalarType: scalarText, text: $1} }
     | TkNumber
         {

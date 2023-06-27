@@ -672,6 +672,78 @@
     "expected_result": "false"
   },
   {
+    "name": "list contains variable true",
+    "rule": "['beta' 'alpha' 'has_reward_program'] CONTAINS var1",
+    "vars": "{\"var1\":\"alpha\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list contains variable false",
+    "rule": "['beta' 'alpha' 'has_reward_program'] CONTAINS var1",
+    "vars": "{\"var1\":\"gamma\"}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list contains variable enclosed all true",
+    "rule": "(['beta' 'alpha' 'has_reward_program'] CONTAINS var1)",
+    "vars": "{\"var1\":\"alpha\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list contains variable enclosed all false",
+    "rule": "(['beta' 'alpha' 'has_reward_program'] CONTAINS var1)",
+    "vars": "{\"var1\":\"gamma\"}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list contains variable enclosed list true",
+    "rule": "(['beta' 'alpha' 'has_reward_program']) CONTAINS var1",
+    "vars": "{\"var1\":\"alpha\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list contains variable enclosed list false",
+    "rule": "(['beta' 'alpha' 'has_reward_program']) CONTAINS var1",
+    "vars": "{\"var1\":\"gamma\"}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list contains variable enclosed var true",
+    "rule": "['beta' 'alpha' 'has_reward_program'] CONTAINS (var1)",
+    "vars": "{\"var1\":\"alpha\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list contains variable enclosed var false",
+    "rule": "['beta' 'alpha' 'has_reward_program'] CONTAINS (var1)",
+    "vars": "{\"var1\":\"gamma\"}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list contains variable enclosed list+all true",
+    "rule": "((['beta' 'alpha' 'has_reward_program']) CONTAINS var1)",
+    "vars": "{\"var1\":\"alpha\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list contains variable enclosed list+all false",
+    "rule": "((['beta' 'alpha' 'has_reward_program']) CONTAINS var1)",
+    "vars": "{\"var1\":\"gamma\"}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list contains variable enclosed list+all+var true",
+    "rule": "((['beta' 'alpha' 'has_reward_program']) CONTAINS (var1))",
+    "vars": "{\"var1\":\"alpha\"}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list contains variable enclosed list+all+var false",
+    "rule": "((['beta' 'alpha' 'has_reward_program']) CONTAINS (var1))",
+    "vars": "{\"var1\":\"gamma\"}",
+    "expected_result": "false"
+  },
+  {
     "name": "version 1",
     "rule": "000100010128 = Version(1.1.128)",
     "vars": "{}",

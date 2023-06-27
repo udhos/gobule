@@ -1,3 +1,4 @@
+// Package bulexer implemetns the lexical analyzer.
 package bulexer
 
 import (

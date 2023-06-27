@@ -1,3 +1,4 @@
+// Package main implements parser-run.
 package main
 
 import (

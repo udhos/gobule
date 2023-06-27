@@ -1,3 +1,4 @@
+// Package parser implements the syntax analyzer.
 package parser
 
 import (
