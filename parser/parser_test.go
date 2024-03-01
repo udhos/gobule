@@ -118,6 +118,9 @@ var testTable = []parserTest{
 	{"list literal 4", "['one' 'two' 'three'] CONTAINS 'four'", `{}`, expectFalse},
 	{"list literal 5", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":1}`, expectTrue},
 	{"list literal 6", "[1 2 3 4] CONTAINS Number(var1)", `{"var1":5}`, expectFalse},
+	{"list literal 7", "[ 'one' 'two' 'three' ] CONTAINS 'two'", `{}`, expectTrue},
+	{"list literal 8", "[ 'one' 'two' 'three' ] CONTAINS 'four'", `{}`, expectFalse},
+	{"list literal 9", "[ 'one''two' 'three' ] CONTAINS 'four'", `{}`, expectError},
 	{"list function empty", "List(var0) CONTAINS 2", `{"var0":[],"var1":1}`, expectFalse},
 	{"list function 1", "List('[1 2 3 4]') CONTAINS Number(var1)", `{"var1":1}`, expectError},
 	{"list function 2", "List(var0) CONTAINS Number(var1)", `{"var0":[1,2,3,4],"var1":1}`, expectTrue},
@@ -204,7 +207,9 @@ func TestSave(t *testing.T) {
 		table = append(table, tt)
 	}
 	buf, _ := json.Marshal(table)
-	ioutil.WriteFile(output, buf, 0777)
+	if err := os.WriteFile(output, buf, 0777); err != nil {
+		t.Errorf("write: %s: %v", output, err)
+	}
 }
 
 func TestParserFromFile(t *testing.T) {

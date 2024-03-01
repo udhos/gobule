@@ -552,6 +552,24 @@
     "expected_result": "false"
   },
   {
+    "name": "list literal 7",
+    "rule": "[ 'one' 'two' 'three' ] CONTAINS 'two'",
+    "vars": "{}",
+    "expected_result": "true"
+  },
+  {
+    "name": "list literal 8",
+    "rule": "[ 'one' 'two' 'three' ] CONTAINS 'four'",
+    "vars": "{}",
+    "expected_result": "false"
+  },
+  {
+    "name": "list literal 9",
+    "rule": "[ 'one''two' 'three' ] CONTAINS 'four'",
+    "vars": "{}",
+    "expected_result": "error"
+  },
+  {
     "name": "list function empty",
     "rule": "List(var0) CONTAINS 2",
     "vars": "{\"var0\":[],\"var1\":1}",

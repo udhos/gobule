@@ -15,6 +15,7 @@ const (
 	stBlank lexState = iota
 	stNumber
 	stText
+	stAfterText
 	stIdent
 	stDot
 	stEOF
@@ -318,12 +319,31 @@ SCANNER:
 			}
 			switch {
 			case b == '\'':
-				l.state = stBlank
+				l.state = stAfterText
 				return l.consume(Token{Type: TkText})
 			default:
 				if errSave := l.buf.WriteByte(b); errSave != nil {
 					return Token{Type: TkError, Value: errSave.Error()}
 				}
+			}
+
+		case stAfterText:
+			switch errByte {
+			case io.EOF:
+				l.state = stEOF
+				break SCANNER
+			case nil:
+			default:
+				return Token{Type: TkError, Value: errByte.Error()}
+			}
+			switch {
+			case b == '\'':
+				return Token{Type: TkError, Value: "missing required space between texts"}
+			default:
+				if errUnread := l.reader.UnreadByte(); errUnread != nil {
+					return Token{Type: TkError, Value: errUnread.Error()}
+				}
+				l.state = stBlank
 			}
 
 		default:
