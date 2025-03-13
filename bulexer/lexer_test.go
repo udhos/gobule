@@ -148,7 +148,7 @@ type brokenBufMock struct {
 	writes    int
 }
 
-func (buf *brokenBufMock) WriteByte(b byte) error {
+func (buf *brokenBufMock) WriteByte(_ byte) error {
 	buf.writes++
 	if buf.writes > buf.maxWrites {
 		return fmt.Errorf("brokenBufMock.WriteByte: writes=%d > maxWrites=%d", buf.writes, buf.maxWrites)

@@ -278,7 +278,7 @@ func testFromFile(t *testing.T, filename string) {
 	scanTable(t, table, "fromFile")
 }
 
-func scanTable(t *testing.T, table []parserTest, label string) {
+func scanTable(t *testing.T, table []parserTest, _ string) {
 
 	for _, data := range table {
 
