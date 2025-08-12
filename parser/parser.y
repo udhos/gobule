@@ -42,6 +42,7 @@ import (
 %token <typeBool> TkKeywordFalse
 %precedence <typeBool> TkKeywordOr
 %precedence <typeBool> TkKeywordAnd
+%precedence <typeBool> TkKeywordNot
 %token <typeBool> TkKeywordNot
 %token <typeBool> TkKeywordContains
 %token <typeBool> TkKeywordCurrentTime
