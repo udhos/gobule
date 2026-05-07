@@ -3,7 +3,6 @@ package parser
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -237,7 +236,7 @@ func testFromFile(t *testing.T, filename string) {
 
 	t.Logf("test file: %s", filename)
 
-	buf, errLoad := ioutil.ReadFile(filename)
+	buf, errLoad := os.ReadFile(filename)
 	if errLoad != nil {
 		t.Errorf("load tests error: %s: %v", filename, errLoad)
 		return
@@ -282,7 +281,7 @@ func scanTable(t *testing.T, table []parserTest, _ string) {
 
 	for _, data := range table {
 
-		var vars map[string]interface{}
+		var vars map[string]any
 
 		if data.vars != "" {
 			if errJSON := json.Unmarshal([]byte(data.vars), &vars); errJSON != nil {
@@ -336,7 +335,7 @@ func TestVarsListStringOnly(t *testing.T) {
 
 	input := "List(userRoles) CONTAINS 'role2'"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"userRoles": []string{"role1", "role2", "role3"},
 	}
 
@@ -357,7 +356,7 @@ func TestVarsListNumberOnly(t *testing.T) {
 
 	input := "List(userRoles) CONTAINS 2"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"userRoles": []int{1, 2, 3},
 	}
 
@@ -378,12 +377,12 @@ func TestVarsListMixed(t *testing.T) {
 
 	input := "List(userRoles) CONTAINS 2"
 
-	var list []interface{}
+	var list []any
 	list = append(list, "1")
 	list = append(list, 2)
 	list = append(list, "3")
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"userRoles": list,
 	}
 
@@ -404,7 +403,7 @@ func TestVarsListWrongType(t *testing.T) {
 
 	input := "List(booleans) CONTAINS [2]"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"booleans": []bool{true, false, true}, // should be []interface{}
 	}
 
@@ -421,13 +420,13 @@ func TestVarsListWrongElemType(t *testing.T) {
 
 	input := "List(userRoles) CONTAINS 2"
 
-	var list []interface{}
+	var list []any
 	list = append(list, "1")
 	list = append(list, 2)
 	list = append(list, "3")
 	list = append(list, true) // bool type is not supported
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"userRoles": list,
 	}
 
@@ -444,13 +443,13 @@ func TestVarNotFound(t *testing.T) {
 
 	input := "List(userRolesNotFound) CONTAINS 2"
 
-	var list []interface{}
+	var list []any
 	list = append(list, "1")
 	list = append(list, 2)
 	list = append(list, "3")
 	list = append(list, true) // bool type is not supported
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"userRoles": list,
 	}
 
@@ -467,7 +466,7 @@ func TestBadNumberConversion(t *testing.T) {
 
 	input := "Number(age) > 2"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"age": "33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
 	}
 
@@ -484,7 +483,7 @@ func TestVarType(t *testing.T) {
 
 	input := "int = '2' AND int64 = '3'"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"int":   int(7),
 		"int64": int64(7),
 	}
@@ -502,7 +501,7 @@ func TestVarTypeBool(t *testing.T) {
 
 	input := "bool = '4'"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"bool": true,
 	}
 
@@ -519,7 +518,7 @@ func TestBadVersion1(t *testing.T) {
 
 	input := "Version(3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333.3.3) = 2"
 
-	vars := map[string]interface{}{}
+	vars := map[string]any{}
 
 	const debug = false
 
@@ -534,7 +533,7 @@ func TestBadVersion2(t *testing.T) {
 
 	input := "Version(3.3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333.3) = 2"
 
-	vars := map[string]interface{}{}
+	vars := map[string]any{}
 
 	const debug = false
 
@@ -549,7 +548,7 @@ func TestBadVersion3(t *testing.T) {
 
 	input := "Version(3.3.3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333) = 2"
 
-	vars := map[string]interface{}{}
+	vars := map[string]any{}
 
 	const debug = false
 
@@ -564,7 +563,7 @@ func TestBadVarNumberType(t *testing.T) {
 
 	input := "Number(value) = 3"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"value": true,
 	}
 
@@ -581,7 +580,7 @@ func TestVarNumberType(t *testing.T) {
 
 	input := "Number(value) = 3 AND Number(age) = 2"
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"value": int(3),
 		"age":   int64(4),
 	}
@@ -599,7 +598,7 @@ func TestBadNumber(t *testing.T) {
 
 	input := "2 < 33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333"
 
-	vars := map[string]interface{}{}
+	vars := map[string]any{}
 
 	const debug = false
 

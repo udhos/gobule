@@ -8,26 +8,34 @@ install_goyacc() {
     popd >/dev/null
 }
 
-# build() {
-# 	local pkg="$1"
+go install golang.org/x/vuln/cmd/govulncheck@latest
+go install golang.org/x/tools/cmd/deadcode@latest
+go install github.com/mgechev/revive@latest
+go install honnef.co/go/tools/cmd/staticcheck@latest
+go install golang.org/x/tools/go/analysis/passes/modernize/cmd/modernize@latest
+go install github.com/gordonklaus/ineffassign@latest
+go install github.com/client9/misspell/cmd/misspell@latest
+go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
 
-# 	gofmt -s -w "$pkg"
-# 	go fix "$pkg"
-# 	go vet "$pkg"
+gofmt -s -w .
 
-# 	hash golint 2>/dev/null && golint "$pkg"
-# 	hash staticcheck 2>/dev/null && staticcheck "$pkg"
+revive ./...
 
-# 	#go test -failfast "$pkg"
+staticcheck ./...
 
-# 	go install -v "$pkg"
-# }
+modernize -fix ./...
 
-#go test -race -covermode=atomic -coverprofile=coverage.txt ./...
+gocyclo -over 15 .
 
-#build ./conv
-#build ./bulexer
-#build ./bulexer-run
+ineffassign ./...
+
+misspell .
+
+go mod tidy
+
+govulncheck ./...
+
+#deadcode ./cmd/*
 
 #
 # Generate parser
@@ -37,15 +45,14 @@ rm -f parser/parser.go
 go generate -v -x ./parser ;# see ./parser/generate.go
 #[ -f parser/parser.go ] || goyacc -o parser.go parser.y
 
-gofmt -s -w .
-
-revive ./...
-
-go install ./...
+go env -w CGO_ENABLED=1
 
 go test -race ./...
 
 go test -race -covermode=atomic -coverprofile=coverage.txt ./...
 
-#build ./parser
-#build ./parser-run
+go env -w CGO_ENABLED=0
+
+go install ./...
+
+go env -u CGO_ENABLED

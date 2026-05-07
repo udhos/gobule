@@ -1,5 +1,5 @@
 module github.com/udhos/gobule
 
-go 1.23.12 // minimum
+go 1.25.10 // minimum
 
-toolchain go1.24.6 // preferred
+toolchain go1.26.3 // preferred

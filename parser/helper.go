@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"slices"
 	"strconv"
 )
 
@@ -42,12 +43,7 @@ func (s scalar) equals(ss scalar) bool {
 }
 
 func contains(list []scalar, wanted scalar) bool {
-	for _, v := range list {
-		if wanted.equals(v) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(list, wanted.equals)
 }
 
 func parseInt(s string) (int64, error) {

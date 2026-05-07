@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	var vars = map[string]interface{}{
+	var vars = map[string]any{
 		"name":   "John",
 		"number": "123",
 	}
